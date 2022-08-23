@@ -22,6 +22,7 @@ const tableColumns = [
     title: "ID",
     dataIndex: "id",
     key: "id",
+    fixed: 'left',
     sorter: (val) => {
       getSortData(val);
     },
@@ -31,7 +32,7 @@ const tableColumns = [
     dataIndex: "goods_name",
     key: "goods_name",
     ellipsis: true,
-    // fixed: "left",
+    fixed: "right",
   },
   {
     title: "价格",
@@ -65,7 +66,7 @@ const tableColumns = [
     title: "操作",
     dataIndex: "action",
     key: "action",
-    // fixed: "right",
+    fixed: "right",
     width: "300px",
     buttons: [
       {

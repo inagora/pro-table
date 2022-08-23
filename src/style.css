@@ -78,6 +78,10 @@ button:focus-visible {
   }
 }
 
+.wd-table {
+  overflow: unset !important;
+}
+
 .wv-toolbar-separator {
   display: inline-block;
   width: 1px;
@@ -87,12 +91,15 @@ button:focus-visible {
   background-color: #d0d0d0;
 }
 .wd-table-header {
-  position: fixed;
+  position: sticky;
+  top: 0;
   width: 100%;
   z-index: 99999;
 }
+.wd-table-content {
+  height: 100%;
+}
 .wd-table-body {
-  padding-top: 55px;
   padding-bottom: 50px;
 }
 .wd-pagination {
@@ -100,4 +107,7 @@ button:focus-visible {
   bottom: 0;
   width: 100%;
   z-index: 99999;
+}
+.wd-table-fixed-left, .wd-table-fixed-right {
+  top: unset !important;
 }

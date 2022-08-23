@@ -1,8 +1,57 @@
 <script setup>
-import { inject } from "vue";
+import { inject, onMounted, onUnmounted } from "vue";
 import { WdTable, WdButtonGroup, WdButton } from "@inagora/wd-view";
+
 const config = inject("config");
 // 编辑、删除
+let allFixedRightEls;
+let allFixedLeftEls;
+onMounted(() => {
+  allFixedRightEls = document.querySelectorAll(".wd-table-fixed-right");
+  allFixedLeftEls = document.querySelectorAll(".wd-table-fixed-left");
+  document
+    .querySelector(".wv-table")
+    .addEventListener("scroll", scrollListener);
+});
+onUnmounted(() => {
+  document
+    .querySelector(".wv-table")
+    .removeEventListener("scroll", scrollListener);
+});
+const scrollListener = (e) => {
+  let scrollLeft = e.target.scrollLeft;
+  if (scrollLeft === 0) {
+    // 滚动到最左边
+    setFixedStyle("left", "remove");
+  } else {
+    setFixedStyle("left", "add");
+  }
+  if (scrollLeft + e.target.clientWidth === e.target.scrollWidth) {
+    setFixedStyle("right", "remove");
+  } else {
+    setFixedStyle("right", "add");
+  }
+};
+// 设置滚动时fixed样式
+const setFixedStyle = (direction, method) => {
+  if (direction === "left") {
+    allFixedLeftEls.forEach((el) => {
+      if (method === "remove") {
+        el.classList.remove("wd-table-fixed-left-first");
+      } else {
+        el.classList.add("wd-table-fixed-left-first");
+      }
+    });
+  } else {
+    allFixedRightEls.forEach((el) => {
+      if (method === "remove") {
+        el.classList.remove("wd-table-fixed-right-first");
+      } else {
+        el.classList.add("wd-table-fixed-right-first");
+      }
+    });
+  }
+};
 </script>
 
 <template>
@@ -23,8 +72,8 @@ const config = inject("config");
               :size="button.size"
               :type="button.type"
               @click="button.click"
-              >{{ button.text }}</wd-button
-            >
+              >{{ button.text }}
+            </wd-button>
           </wd-button-group>
         </template>
       </template>

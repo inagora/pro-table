@@ -12,7 +12,7 @@ provide("config", config);
 </script>
 
 <template>
-  <div class="wv-pro-table">
+  <div ref="wvProTable" class="wv-pro-table">
     <template v-for="(com, index) in components" :key="index">
       <component :is="com"></component>
     </template>
