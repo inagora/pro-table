@@ -8,7 +8,76 @@ import Title from "./components/Title.vue";
 const components = [Title, Toolbar, Search, Table];
 const props = defineProps(["config"]);
 const config = props.config;
-provide("config", config);
+const conf = Object.assign(
+  {
+    /**
+     * 页面顶部标题
+     */
+    title: "",
+    /**
+     * 表格列配置
+     */
+    columns: [],
+    /**
+     * 静态列表数据，如果设置了则不发请求
+     */
+    records: false,
+    /**
+     * 搜索区域配置
+     */
+    searchFilters: [],
+    /**
+     * 操作区
+     */
+    toolbar: false,
+    /**
+     * 列表选择模式：radio、checkbox
+     */
+    selectMode: "checkbox",
+    /**
+     * 表单是否显示label
+     */
+    labelVisible: true,
+    /**
+     * 列表请求url
+     */
+    url: "",
+    /**
+     * 添加url
+     */
+    addUrl: "",
+    /**
+     * 删除url
+     */
+    deleteUrl: "",
+    /**
+     * 更新url
+     */
+    updateUrl: "",
+    /**
+     * 是否自动显示导出按钮
+     */
+    downloadable: false,
+    /**
+     * 进入页面是否自动发送请求
+     */
+    autoRequest: true,
+    /**
+     * 列头自适应宽度
+     */
+    autoWidth: false,
+    /**
+     * ajax请求method
+     */
+    method: "GET",
+    /**
+     * ajax请求配置
+     */
+    ajaxSetting: {},
+  },
+  config
+);
+provide("config", conf);
 </script>
 
 <template>

@@ -1,14 +1,14 @@
 <script setup>
-import { inject, onMounted, onUnmounted } from "vue";
+import { inject, onMounted, onUnmounted, ref } from "vue";
 import { WdTable, WdButtonGroup, WdButton } from "@inagora/wd-view";
+import Ajax from "../utils/Ajax.js";
 
 const config = inject("config");
 // 编辑、删除
 let allFixedRightEls;
 let allFixedLeftEls;
 onMounted(() => {
-  allFixedRightEls = document.querySelectorAll(".wd-table-fixed-right");
-  allFixedLeftEls = document.querySelectorAll(".wd-table-fixed-left");
+  load();
   document
     .querySelector(".wv-table")
     .addEventListener("scroll", scrollListener);
@@ -19,6 +19,10 @@ onUnmounted(() => {
     .removeEventListener("scroll", scrollListener);
 });
 const scrollListener = (e) => {
+  if (!allFixedRightEls) {
+    allFixedRightEls = document.querySelectorAll(".wd-table-fixed-right");
+    allFixedLeftEls = document.querySelectorAll(".wd-table-fixed-left");
+  }
   let scrollLeft = e.target.scrollLeft;
   if (scrollLeft === 0) {
     // 滚动到最左边
@@ -52,6 +56,20 @@ const setFixedStyle = (direction, method) => {
     });
   }
 };
+// 请求数据
+const records = ref([]);
+const ajax = new Ajax(config.ajaxSetting);
+const load = () => {
+  if (config.records) {
+    records.value = config.records;
+    return;
+  }
+  ajax
+    .request({
+      url: config.url,
+    })
+    .then((res) => {});
+};
 </script>
 
 <template>
@@ -59,9 +77,10 @@ const setFixedStyle = (direction, method) => {
     <wd-table
       ref="wdTable"
       :columns="config.columns"
-      :data-source="config.records"
+      :data-source="records"
       text="数据加载中"
       empty-text="现在还没有数据噢~"
+      @change="load"
     >
       <template v-slot:custom="slotScope">
         <template v-if="slotScope.column.dataIndex === 'action'">

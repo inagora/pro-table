@@ -22,7 +22,7 @@ const tableColumns = [
     title: "ID",
     dataIndex: "id",
     key: "id",
-    fixed: 'left',
+    fixed: "left",
     sorter: (val) => {
       getSortData(val);
     },
@@ -38,7 +38,7 @@ const tableColumns = [
     title: "价格",
     dataIndex: "price",
     key: "price",
-    // fixed: "left",
+    fixed: "left",
     sorter: (val) => {
       getSortData(val);
     },
@@ -107,7 +107,8 @@ onMounted(() => {
     el: "#wd-table",
     title: "pro-table",
     columns: tableColumns,
-    records: dataList,
+    // records: dataList,
+    url: "http://123.57.68.108:5173",
     searchFilters: [
       {
         type: "text",
@@ -120,6 +121,27 @@ onMounted(() => {
         placeholder: "请输入年龄",
         label: "年龄",
         prop: "age",
+      },
+      {
+        type: "checkbox",
+        label: "是否检查",
+        prop: "isCheck",
+      },
+      {
+        type: "select",
+        placeholder: "请选择学历",
+        label: "学历",
+        prop: "education",
+        list: [
+          {
+            label: "研究生",
+            value: 1,
+          },
+          {
+            label: "本科",
+            value: 2,
+          },
+        ],
       },
     ],
     toolbar: [

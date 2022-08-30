@@ -5,6 +5,7 @@ import {
   WdFormItem,
   WdInput,
   WdSelect,
+  WdOption,
   WdDatePicker,
   WdRadio,
   WdCheckbox,
@@ -18,10 +19,10 @@ const filterMap = {
   datetime: WdDatePicker,
   date: WdDatePicker,
   number: WdInputNumber,
-  combobox: WdSelect,
-  multiple: WdSelect,
+  select: WdSelect,
   checkbox: WdCheckbox,
   switch: WdSwitch,
+  radio: WdRadio,
 };
 
 // formConf
@@ -49,7 +50,16 @@ const filterMap = {
         <component
           :is="filterMap[filter.type]"
           :placeholder="filter.placeholder"
-        ></component>
+        >
+          <template v-if="filter.list">
+            <wd-option
+              v-for="(option, index) in filter.list"
+              :key="index"
+              :label="option.label"
+              :value="option.value"
+            ></wd-option>
+          </template>
+        </component>
       </wd-form-item>
       <wd-form-item label="">
         <wd-button type="primary" nativeType="submit" size="small"
@@ -63,5 +73,13 @@ const filterMap = {
 .wv-search {
   border-bottom: 1px solid #d0d0d0;
   padding: 10px 0 0 10px;
+}
+</style>
+<style>
+.wd-select {
+  width: 150px !important;
+}
+.popper {
+  z-index: 999999 !important;
 }
 </style>
