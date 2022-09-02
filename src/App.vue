@@ -108,7 +108,7 @@ onMounted(() => {
     title: "pro-table",
     columns: tableColumns,
     // records: dataList,
-    url: "http://123.57.68.108:5173",
+    url: "http://123.57.68.108:8080",
     searchFilters: [
       {
         type: "text",

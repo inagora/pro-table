@@ -34,7 +34,11 @@ export default class Ajax {
         if (xhr.status < 200 || xhr.status >= 300) {
           reject(xhr);
         } else {
-          resolve(xhr);
+          try {
+            resolve(JSON.parse(xhr.response));
+          } catch (e) {
+            resolve(null);
+          }
         }
       };
 

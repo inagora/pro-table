@@ -58,8 +58,10 @@ const setFixedStyle = (direction, method) => {
 };
 // 请求数据
 const records = ref([]);
+const loading = ref(false);
 const ajax = new Ajax(config.ajaxSetting);
 const load = () => {
+  loading.value = true;
   if (config.records) {
     records.value = config.records;
     return;
@@ -68,35 +70,42 @@ const load = () => {
     .request({
       url: config.url,
     })
-    .then((res) => {});
+    .then((res) => {
+      loading.value = false;
+      if (res && res.data.list) {
+        records.value = res.data.list;
+      }
+    });
 };
 </script>
 
 <template>
   <div class="wv-table">
-    <wd-table
-      ref="wdTable"
-      :columns="config.columns"
-      :data-source="records"
-      text="数据加载中"
-      empty-text="现在还没有数据噢~"
-      @change="load"
-    >
-      <template v-slot:custom="slotScope">
-        <template v-if="slotScope.column.dataIndex === 'action'">
-          <wd-button-group>
-            <wd-button
-              v-for="(button, index) in slotScope.column.buttons"
-              :ke="index"
-              :size="button.size"
-              :type="button.type"
-              @click="button.click"
-              >{{ button.text }}
-            </wd-button>
-          </wd-button-group>
+    <wd-loading :loading="loading">
+      <wd-table
+        ref="wdTable"
+        :columns="config.columns"
+        :data-source="records"
+        text="数据加载中"
+        empty-text="现在还没有数据噢~"
+        @change="load"
+      >
+        <template v-slot:custom="slotScope">
+          <template v-if="slotScope.column.dataIndex === 'action'">
+            <wd-button-group>
+              <wd-button
+                v-for="(button, index) in slotScope.column.buttons"
+                :ke="index"
+                :size="button.size"
+                :type="button.type"
+                @click="button.click"
+                >{{ button.text }}
+              </wd-button>
+            </wd-button-group>
+          </template>
         </template>
-      </template>
-    </wd-table>
+      </wd-table>
+    </wd-loading>
   </div>
 </template>
 <style scoped>
