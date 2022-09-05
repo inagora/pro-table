@@ -2,8 +2,21 @@
 import { inject, onMounted, onUnmounted, ref } from "vue";
 import { WdTable, WdButtonGroup, WdButton } from "@inagora/wd-view";
 import Ajax from "../utils/Ajax.js";
+import download from "../utils/Download.js";
 
 const config = inject("config");
+const emitter = inject("emitter");
+emitter.on("download", () => {
+  download(config.columns, records.value);
+});
+emitter.on("downloadAll", async () => {
+  let allData = [];
+  for (let i = 0; i < pageCount.value; i++) {
+    const pageData = await load();
+    allData = allData.concat(pageData);
+  }
+  download(config.columns, allData);
+});
 // 编辑、删除
 let allFixedRightEls;
 let allFixedLeftEls;
@@ -59,6 +72,7 @@ const setFixedStyle = (direction, method) => {
 // 请求数据
 const records = ref([]);
 const loading = ref(false);
+const pageCount = ref(1);
 const ajax = new Ajax(config.ajaxSetting);
 const load = () => {
   loading.value = true;
@@ -66,16 +80,22 @@ const load = () => {
     records.value = config.records;
     return;
   }
-  ajax
-    .request({
-      url: config.url,
-    })
-    .then((res) => {
-      loading.value = false;
-      if (res && res.data.list) {
-        records.value = res.data.list;
-      }
-    });
+  return new Promise((resolve) => {
+    ajax
+      .request({
+        url: config.url,
+      })
+      .then((res) => {
+        loading.value = false;
+        if (res && res.data.list) {
+          records.value = res.data.list;
+          pageCount.value = res.data.page_count;
+          resolve(res.data.list);
+        } else {
+          resolve(res);
+        }
+      });
+  });
 };
 </script>
 
@@ -86,9 +106,10 @@ const load = () => {
         ref="wdTable"
         :columns="config.columns"
         :data-source="records"
+        :page-count="pageCount"
         text="数据加载中"
         empty-text="现在还没有数据噢~"
-        @change="load"
+        @current-change="load"
       >
         <template v-slot:custom="slotScope">
           <template v-if="slotScope.column.dataIndex === 'action'">

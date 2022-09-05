@@ -26,6 +26,8 @@ const tableColumns = [
     sorter: (val) => {
       getSortData(val);
     },
+    visible: true, // 是否可见
+    exportable: false, // 是否可导出
   },
   {
     title: "商品名",
@@ -107,6 +109,7 @@ onMounted(() => {
     el: "#wd-table",
     title: "pro-table",
     columns: tableColumns,
+    downloadable: true,
     // records: dataList,
     url: "http://123.57.68.108:8080",
     searchFilters: [

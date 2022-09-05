@@ -1,5 +1,7 @@
 <script setup>
 import { provide } from "vue";
+import mitt from "mitt";
+const emitter = mitt();
 import Table from "./components/Table.vue";
 import Toolbar from "./components/Toolbar.vue";
 import Search from "./components/Search.vue";
@@ -78,6 +80,7 @@ const conf = Object.assign(
   config
 );
 provide("config", conf);
+provide("emitter", emitter);
 </script>
 
 <template>

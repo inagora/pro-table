@@ -10,6 +10,7 @@ specifiers:
   eslint-plugin-promise: ^6.0.0
   eslint-plugin-vue: ^9.3.0
   koa: ^2.13.4
+  mitt: ^3.0.0
   postcss-html: ^1.5.0
   prettier: ^2.7.1
   stylelint: ^14.9.1
@@ -22,6 +23,7 @@ specifiers:
 
 dependencies:
   '@inagora/wd-view': 1.0.4_vue@3.2.37
+  mitt: 3.0.0
   vue: 3.2.37
 
 devDependencies:
@@ -2140,6 +2142,10 @@ packages:
 
   /mitt/2.1.0:
     resolution: {integrity: sha512-ILj2TpLiysu2wkBbWjAmww7TkZb65aiQO+DkVdUTBpBXq+MHYiETENkKFMtsJZX1Lf4pe4QOrTSjIfUwN5lRdg==}
+    dev: false
+
+  /mitt/3.0.0:
+    resolution: {integrity: sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==}
     dev: false
 
   /moment/2.29.4:

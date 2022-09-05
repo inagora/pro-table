@@ -19,6 +19,9 @@ app.use((ctx) => {
   ctx.body = {
     data: {
       list: goodsList,
+      total: 100,
+      page_count: 5,
+      page: 1,
     },
   };
 });
