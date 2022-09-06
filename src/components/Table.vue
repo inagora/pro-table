@@ -9,7 +9,7 @@ import {
   WdModal,
   WdLoading,
 } from "@inagora/wd-view";
-import WvFrom from "./Form.vue";
+import WvForm from "./Form.vue";
 import Ajax from "../utils/Ajax.js";
 import download from "../utils/Download.js";
 import { isObject } from "../utils/util.js";
@@ -65,7 +65,7 @@ emitter.on("downloadAll", async () => {
 });
 // 搜索事件
 let searchParams = {};
-emitter.on("opSearch", (params) => {
+emitter.on("wvSearch", (params) => {
   searchParams = params;
   page = 1;
   load();
@@ -74,7 +74,7 @@ const opType = ref("add");
 // 新增一项
 const formData = ref({});
 const isShowAddDialog = ref(false);
-emitter.on("opAdd", () => {
+emitter.on("wvAdd", () => {
   opType.value = "add";
   config.addConf.forEach((item) => {
     formData.value[item.prop] = item.value || "";
@@ -119,6 +119,7 @@ const deleteHandler = (row) => {
     title: "提示",
     type: "danger",
     content: "确定要删除吗？",
+    destroyOnClose: true,
     onConfirm() {
       ajax
         .request({
@@ -305,7 +306,7 @@ const pageChangeHandler = (currPage) => {
       :append-to-body="true"
       @close="isShowAddDialog = false"
     >
-      <wv-from :filters="config.addConf" v-model="formData"></wv-from>
+      <wv-form :filters="config.addConf" v-model="formData"></wv-form>
       <template #footer>
         <wd-button type="primary" size="small" @click="saveHandler"
           >保存</wd-button

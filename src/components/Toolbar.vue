@@ -14,7 +14,7 @@ onMounted(() => {
       type: "primary",
       text: "新增",
       click() {
-        emitter.emit("opAdd");
+        emitter.emit("wvAdd");
       },
     });
   }
@@ -32,7 +32,9 @@ onMounted(() => {
         {
           type: "primary",
           text: "导出当前页",
-          click() {},
+          click() {
+            emitter.emit("download");
+          },
         },
         "|",
       ]
@@ -111,6 +113,7 @@ const readExcel = (file) => {
         <input
           ref="uploadInput"
           type="file"
+          accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
           @change="changeHandler($event, button)"
         />
       </div>

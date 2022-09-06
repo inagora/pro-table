@@ -30,7 +30,7 @@ config.searchFilters.forEach((filter) => {
   formData.value[filter.prop] = filter.value || "";
 });
 const searchHandler = () => {
-  emitter.emit("opSearch", formData.value);
+  emitter.emit("wvSearch", formData.value);
 };
 // formConf
 // 自定义搜索
