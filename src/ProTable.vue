@@ -49,6 +49,10 @@ const conf = Object.assign(
      */
     addUrl: "",
     /**
+     * 添加conf
+     */
+    addConf: "",
+    /**
      * 删除url
      */
     deleteUrl: "",
@@ -56,6 +60,10 @@ const conf = Object.assign(
      * 更新url
      */
     updateUrl: "",
+    /**
+     * 编辑conf
+     */
+    editConf: "",
     /**
      * 是否自动显示导出按钮
      */
@@ -76,6 +84,14 @@ const conf = Object.assign(
      * ajax请求配置
      */
     ajaxSetting: {},
+    /**
+     * 搜索区域后面的按钮
+     */
+    searchAreaBtns: false,
+    /**
+     * 搜索区域是否可重置
+     */
+    resetable: false,
   },
   config
 );

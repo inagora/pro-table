@@ -43,3 +43,23 @@ export function loadCss(url) {
     return p;
   }
 }
+
+let class2type = {},
+  toString = class2type.toString;
+"Boolean Number String Function Array Date RegExp Object Error"
+  .split(" ")
+  .forEach((name) => {
+    class2type["[object " + name + "]"] = name.toLowerCase();
+  });
+
+export function $type(obj) {
+  return obj == null ? String(obj) : class2type[toString.call(obj)] || "object";
+}
+
+export function isObject(obj) {
+  return $type(obj) == "object";
+}
+
+export function isPlainObject(obj) {
+  return isObject(obj) && Object.getPrototypeOf(obj) == Object.prototype;
+}

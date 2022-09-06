@@ -110,8 +110,37 @@ onMounted(() => {
     title: "pro-table",
     columns: tableColumns,
     downloadable: true,
+    autoRequest: true,
     // records: dataList,
     url: "http://123.57.68.108:8080",
+    addUrl: "http://123.57.68.108:8080",
+    updateUrl: "http://123.57.68.108:8080",
+    deleteUrl: "http://123.57.68.108:8080",
+    addConf: [
+      {
+        type: "text",
+        placeholder: "请输入ID",
+        label: "ID",
+        prop: "id",
+        value: "123",
+      },
+      {
+        type: "select",
+        placeholder: "请选择学历",
+        label: "学历",
+        prop: "education",
+        list: [
+          {
+            label: "研究生",
+            value: 1,
+          },
+          {
+            label: "本科",
+            value: 2,
+          },
+        ],
+      },
+    ],
     searchFilters: [
       {
         type: "text",
@@ -168,6 +197,24 @@ onMounted(() => {
       {
         type: "danger",
         text: "批量删除",
+        // loading: true,
+        click() {
+          console.log(123);
+        },
+      },
+      {
+        type: "upload",
+        subtype: "upload",
+        text: "上传文件",
+        click(val) {
+          console.log(val);
+        },
+      },
+    ],
+    searchAreaBtns: [
+      {
+        type: "primary",
+        text: "自定义按钮",
         // loading: true,
         click() {
           console.log(123);

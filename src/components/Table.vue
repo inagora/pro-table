@@ -1,10 +1,49 @@
 <script setup>
 import { inject, onMounted, onUnmounted, ref } from "vue";
-import { WdTable, WdButtonGroup, WdButton } from "@inagora/wd-view";
+import {
+  WdTable,
+  WdButtonGroup,
+  WdButton,
+  WdDialog,
+  WdMessage,
+  WdModal,
+} from "@inagora/wd-view";
+import WvFrom from "./Form.vue";
 import Ajax from "../utils/Ajax.js";
 import download from "../utils/Download.js";
 
 const config = inject("config");
+// 如果设置了updateUrl,但是没有设置editConf,则使用addConf
+if (config.updateUrl && !config.editConf) {
+  config.editConf = config.addConf;
+}
+// 表头自适应宽度
+if (config.autoWidth) {
+  config.columns.forEach((column) => {
+    column.width = flexColumnWidth(column.title);
+  });
+}
+const flexColumnWidth = (str) => {
+  let flexWidth = 0;
+  for (const char of str) {
+    if ((char >= "A" && char <= "Z") || (char >= "a" && char <= "z")) {
+      // 如果是英文字符，为字符分配8个单位宽度
+      flexWidth += 8;
+    } else if (char >= "\u4e00" && char <= "\u9fa5") {
+      // 如果是中文字符，为字符分配18个单位宽度
+      flexWidth += 18;
+    } else {
+      // 其他种类字符，为字符分配8个单位宽度
+      flexWidth += 8;
+    }
+  }
+  if (flexWidth < 100) {
+    // 设置最小宽度
+    flexWidth = 100;
+  }
+  return flexWidth;
+};
+
 const emitter = inject("emitter");
 emitter.on("download", () => {
   download(config.columns, records.value);
@@ -17,11 +56,80 @@ emitter.on("downloadAll", async () => {
   }
   download(config.columns, allData);
 });
-// 编辑、删除
+const opType = ref("add");
+// 新增一项
+const formData = ref({});
+const isShowAddDialog = ref(false);
+emitter.on("add", () => {
+  opType.value = "add";
+  config.addConf.forEach((item) => {
+    formData.value[item.prop] = item.value || "";
+  });
+  isShowAddDialog.value = true;
+});
+// 保存
+const saveHandler = () => {
+  saveRequest(config.addUrl);
+};
+const saveRequest = (url) => {
+  ajax
+    .request({
+      url,
+      method: "POST",
+      data: formData.value,
+    })
+    .then((res) => {
+      if (res && res.code) {
+        load();
+      } else {
+        WdMessage({
+          message: "保存失败",
+          type: "error",
+        });
+      }
+    });
+};
+// 编辑
+const editHandler = () => {
+  opType.value = "edit";
+  config.editConf.forEach((item) => {
+    formData.value[item.prop] = item.value || "";
+  });
+  isShowAddDialog.value = true;
+};
+// 删除
+const deleteHandler = (id) => {
+  WdModal.confirm({
+    title: "提示",
+    type: "danger",
+    content: "确定要删除吗？",
+    onConfirm() {
+      ajax
+        .request({
+          url: config.deleteUrl,
+          method: "POST",
+          data: { id },
+        })
+        .then((res) => {
+          if (res && res.code) {
+            load();
+            this.destroy();
+          } else {
+            WdMessage({
+              message: "删除失败",
+              type: "error",
+            });
+          }
+        });
+    },
+  });
+};
 let allFixedRightEls;
 let allFixedLeftEls;
 onMounted(() => {
-  load();
+  if (config.autoRequest) {
+    load();
+  }
   document
     .querySelector(".wv-table")
     .addEventListener("scroll", scrollListener);
@@ -73,6 +181,7 @@ const setFixedStyle = (direction, method) => {
 const records = ref([]);
 const loading = ref(false);
 const pageCount = ref(1);
+let page = 1;
 const ajax = new Ajax(config.ajaxSetting);
 const load = () => {
   loading.value = true;
@@ -84,6 +193,9 @@ const load = () => {
     ajax
       .request({
         url: config.url,
+        data: {
+          page,
+        },
       })
       .then((res) => {
         loading.value = false;
@@ -97,6 +209,10 @@ const load = () => {
       });
   });
 };
+const pageChangeHandler = (currPage) => {
+  page = currPage;
+  load();
+};
 </script>
 
 <template>
@@ -109,7 +225,7 @@ const load = () => {
         :page-count="pageCount"
         text="数据加载中"
         empty-text="现在还没有数据噢~"
-        @current-change="load"
+        @current-change="pageChangeHandler"
       >
         <template v-slot:custom="slotScope">
           <template v-if="slotScope.column.dataIndex === 'action'">
@@ -122,11 +238,42 @@ const load = () => {
                 @click="button.click"
                 >{{ button.text }}
               </wd-button>
+              <wd-button
+                v-if="config.updateUrl && config.editConf"
+                size="small"
+                type="primary"
+                @click="editHandler"
+                >编辑
+              </wd-button>
+              <wd-button
+                v-if="config.deleteUrl"
+                size="small"
+                type="danger"
+                @click="deleteHandler(slotScope.row.id)"
+                >编辑
+              </wd-button>
             </wd-button-group>
           </template>
         </template>
       </wd-table>
     </wd-loading>
+    <wd-dialog
+      v-model="isShowAddDialog"
+      :title="opType === 'add' ? '新增' : '编辑'"
+      :destroy-on-close="true"
+      :append-to-body="true"
+      @close="isShowAddDialog = false"
+    >
+      <wv-from :filters="config.addConf" v-model="formData"></wv-from>
+      <template #footer>
+        <wd-button type="primary" size="small" @click="saveHandler"
+          >保存</wd-button
+        >
+        <wd-button size="small" @click="isShowAddDialog = false"
+          >取消</wd-button
+        >
+      </template>
+    </wd-dialog>
   </div>
 </template>
 <style scoped>
@@ -134,5 +281,10 @@ const load = () => {
   flex: 1;
   width: 100%;
   overflow-y: scroll;
+}
+</style>
+<style>
+.wd-dialog-mask {
+  z-index: 999999 !important;
 }
 </style>
