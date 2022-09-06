@@ -74,12 +74,7 @@ const readExcel = (file) => {
   return new Promise(async (resolve, reject) => {
     try {
       const workbook = new ExcelJS.Workbook();
-      //await workbook.xlsx.readFile(filename);从文件读取
-      //await workbook.xlsx.read(stream);从流读取
-      //await workbook.xlsx.load(data);从 buffer 加载
       const result = await workbook.xlsx.load(file);
-      // 按 name 提取工作表 workbook.getWorksheet('My Sheet');
-      // 按 id 提取工作表 workbook.getWorksheet(1);
       const worksheet = result.getWorksheet();
       const lines = [];
       //遍历工作表中具有值的所有行

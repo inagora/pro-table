@@ -20,11 +20,6 @@ if (config.updateUrl && !config.editConf) {
   config.editConf = config.addConf;
 }
 // 表头自适应宽度
-if (config.autoWidth) {
-  config.columns.forEach((column) => {
-    column.width = flexColumnWidth(column.title);
-  });
-}
 const flexColumnWidth = (str) => {
   let flexWidth = 0;
   for (const char of str) {
@@ -45,6 +40,11 @@ const flexColumnWidth = (str) => {
   }
   return flexWidth;
 };
+if (config.autoWidth) {
+  config.columns.forEach((column) => {
+    column.width = flexColumnWidth(column.title);
+  });
+}
 
 const emitter = inject("emitter");
 emitter.on("download", () => {

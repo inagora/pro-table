@@ -30,7 +30,7 @@ const tableColumns = [
     exportable: false, // 是否可导出
   },
   {
-    title: "商品名",
+    title: "商品名商品名商品名商品名商品名商品名商品名商品名",
     dataIndex: "goods_name",
     key: "goods_name",
     ellipsis: true,
@@ -112,6 +112,7 @@ onMounted(() => {
     columns: tableColumns,
     downloadable: true,
     autoRequest: true,
+    // autoWidth: true,
     // records: dataList,
     url: "http://123.57.68.108:8080",
     addUrl: "http://123.57.68.108:8080",
