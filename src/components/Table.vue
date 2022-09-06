@@ -7,10 +7,12 @@ import {
   WdDialog,
   WdMessage,
   WdModal,
+  WdLoading,
 } from "@inagora/wd-view";
 import WvFrom from "./Form.vue";
 import Ajax from "../utils/Ajax.js";
 import download from "../utils/Download.js";
+import { isObject } from "../utils/util.js";
 
 const config = inject("config");
 // 如果设置了updateUrl,但是没有设置editConf,则使用addConf
@@ -48,19 +50,31 @@ const emitter = inject("emitter");
 emitter.on("download", () => {
   download(config.columns, records.value);
 });
+const exportPage = ref(1);
+const exporting = ref(false);
 emitter.on("downloadAll", async () => {
   let allData = [];
+  exporting.value = true;
   for (let i = 0; i < pageCount.value; i++) {
-    const pageData = await load();
+    exportPage.value = i + 1;
+    const pageData = await load(i + 1);
     allData = allData.concat(pageData);
   }
+  exporting.value = false;
   download(config.columns, allData);
+});
+// 搜索事件
+let searchParams = {};
+emitter.on("opSearch", (params) => {
+  searchParams = params;
+  page = 1;
+  load();
 });
 const opType = ref("add");
 // 新增一项
 const formData = ref({});
 const isShowAddDialog = ref(false);
-emitter.on("add", () => {
+emitter.on("opAdd", () => {
   opType.value = "add";
   config.addConf.forEach((item) => {
     formData.value[item.prop] = item.value || "";
@@ -80,6 +94,7 @@ const saveRequest = (url) => {
     })
     .then((res) => {
       if (res && res.code) {
+        page = 1;
         load();
       } else {
         WdMessage({
@@ -87,6 +102,7 @@ const saveRequest = (url) => {
           type: "error",
         });
       }
+      emitter.emit(opType.value, res);
     });
 };
 // 编辑
@@ -98,7 +114,7 @@ const editHandler = () => {
   isShowAddDialog.value = true;
 };
 // 删除
-const deleteHandler = (id) => {
+const deleteHandler = (row) => {
   WdModal.confirm({
     title: "提示",
     type: "danger",
@@ -108,10 +124,13 @@ const deleteHandler = (id) => {
         .request({
           url: config.deleteUrl,
           method: "POST",
-          data: { id },
+          data: {
+            [config.idIndex]: row[config.idIndex],
+          },
         })
         .then((res) => {
           if (res && res.code) {
+            page = 1;
             load();
             this.destroy();
           } else {
@@ -120,6 +139,7 @@ const deleteHandler = (id) => {
               type: "error",
             });
           }
+          emitter.emit("delete", res);
         });
     },
   });
@@ -183,19 +203,29 @@ const loading = ref(false);
 const pageCount = ref(1);
 let page = 1;
 const ajax = new Ajax(config.ajaxSetting);
-const load = () => {
+const load = (currentPage) => {
+  // let searchParams = {
+  //   page: currentPage || page,
+  // };
+  searchParams.page = currentPage || page;
+  // emit返回值接收不到，有问题待解决
+  // if (!currentPage) {
+  //   let result = emitter.emit("beforeDataRequest", searchParams);
+  //   if (!result) return;
+  //   if (isObject(result)) {
+  //     searchParams = Object.assign({}, searchParams, result);
+  //   }
+  // }
   loading.value = true;
   if (config.records) {
     records.value = config.records;
     return;
   }
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     ajax
       .request({
         url: config.url,
-        data: {
-          page,
-        },
+        data: searchParams,
       })
       .then((res) => {
         loading.value = false;
@@ -204,7 +234,11 @@ const load = () => {
           pageCount.value = res.data.page_count;
           resolve(res.data.list);
         } else {
-          resolve(res);
+          reject(res);
+        }
+        // 非导出
+        if (!currentPage) {
+          emitter.emit("dataLoad", res);
         }
       });
   });
@@ -217,7 +251,14 @@ const pageChangeHandler = (currPage) => {
 
 <template>
   <div class="wv-table">
-    <wd-loading :loading="loading">
+    <wd-loading
+      :loading="loading || exporting"
+      :text="
+        exporting
+          ? '数据导出中：当前第' + exportPage + '页，总共 ' + pageCount + '页'
+          : '数据加载中'
+      "
+    >
       <wd-table
         ref="wdTable"
         :columns="config.columns"
@@ -249,8 +290,8 @@ const pageChangeHandler = (currPage) => {
                 v-if="config.deleteUrl"
                 size="small"
                 type="danger"
-                @click="deleteHandler(slotScope.row.id)"
-                >编辑
+                @click="deleteHandler(slotScope.row)"
+                >删除
               </wd-button>
             </wd-button-group>
           </template>

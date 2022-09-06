@@ -14,7 +14,7 @@ onMounted(() => {
       type: "primary",
       text: "新增",
       click() {
-        emitter.emit("add");
+        emitter.emit("opAdd");
       },
     });
   }
@@ -155,5 +155,7 @@ const readExcel = (file) => {
   z-index: 1;
   left: 0;
   top: 0;
+  cursor: pointer;
+  font-size: 0;
 }
 </style>

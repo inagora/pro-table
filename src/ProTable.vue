@@ -1,13 +1,14 @@
 <script setup>
-import { provide } from "vue";
+import { provide, onUnmounted } from "vue";
 import mitt from "mitt";
 const emitter = mitt();
 import Table from "./components/Table.vue";
 import Toolbar from "./components/Toolbar.vue";
 import Search from "./components/Search.vue";
 import Title from "./components/Title.vue";
+import Tips from "./components/Tips.vue";
 // 支持的组件
-const components = [Title, Toolbar, Search, Table];
+const components = [Title, Tips, Toolbar, Search, Table];
 const props = defineProps(["config"]);
 const config = props.config;
 const conf = Object.assign(
@@ -16,6 +17,10 @@ const conf = Object.assign(
      * 页面顶部标题
      */
     title: "",
+    /**
+     * 自定义的页面部分
+     */
+    tips: "",
     /**
      * 表格列配置
      */
@@ -92,11 +97,27 @@ const conf = Object.assign(
      * 搜索区域是否可重置
      */
     resetable: false,
+    /**
+     * 事件监听
+     */
+    listeners: {},
+    /**
+     * 操作需要的主键
+     */
+    idIndex: "id",
   },
   config
 );
 provide("config", conf);
 provide("emitter", emitter);
+emitter.on("*", (type, e) => {
+  if (config.listeners && config.listeners[type]) {
+    return config.listeners[type](e);
+  }
+});
+onUnmounted(() => {
+  emitter.all.clear();
+});
 </script>
 
 <template>

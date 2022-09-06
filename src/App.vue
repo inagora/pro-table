@@ -105,9 +105,10 @@ setTimeout(() => {
   currentPage.value = 3;
 }, 2000);
 onMounted(() => {
-  init({
+  const app = init({
     el: "#wd-table",
     title: "pro-table",
+    tips: "<div>tips</div>",
     columns: tableColumns,
     downloadable: true,
     autoRequest: true,
@@ -221,6 +222,24 @@ onMounted(() => {
         },
       },
     ],
+    listeners: {
+      dataLoad(res) {
+        console.log("dataload: ", res);
+      },
+      beforeDataRequest(data) {
+        console.log(data);
+        return true;
+      },
+      // beforeAdd() {},
+      // beforeEdit() {},
+      // beforeDelete() {},
+      add() {},
+      edit() {},
+      delete() {},
+      // beforeSearch(params) {},
+      // beforeDownload(params) {},
+    },
   });
+  console.log(app);
 });
 </script>

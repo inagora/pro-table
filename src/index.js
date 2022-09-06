@@ -25,7 +25,6 @@ export function init(config) {
     },
   });
   app.mount(el);
-  console.log(config);
   // 这里不能直接用模板了，初始化之后会有问题；所以得使用虚拟node
   const vnode = createVNode(ProTable, { config });
   render(vnode, el);
