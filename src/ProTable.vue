@@ -26,6 +26,10 @@ const conf = Object.assign(
      */
     columns: [],
     /**
+     * @param {String} pageMode 分页模式。普通模式(normal)把所有数据分成等分的多少页，按页号取每页数据；瀑布流模式(waterfall)，根据当前页的第一项，向前取一页；或最后一项，向后取一页
+     */
+    pageMode: "normal", // normal | waterfall
+    /**
      * 静态列表数据，如果设置了则不发请求
      */
     records: false,

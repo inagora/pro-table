@@ -212,6 +212,39 @@ onMounted(() => {
           console.log(val);
         },
       },
+      {
+        type: "primary",
+        text: "导出",
+        // loading: true,
+        click() {
+          console.log(123);
+        },
+      },
+      {
+        type: "primary",
+        text: "导出全部",
+        // loading: true,
+        click() {
+          console.log(123);
+        },
+      },
+      "|",
+      {
+        type: "danger",
+        text: "批量删除",
+        // loading: true,
+        click() {
+          console.log(123);
+        },
+      },
+      {
+        type: "upload",
+        subtype: "upload",
+        text: "上传文件",
+        click(val) {
+          console.log(val);
+        },
+      },
     ],
     searchAreaBtns: [
       {
