@@ -47,12 +47,12 @@ if (config.autoWidth) {
 }
 
 const emitter = inject("emitter");
-emitter.on("download", () => {
+emitter.on("wv:download", () => {
   download(config.columns, records.value);
 });
 const exportPage = ref(1);
 const exporting = ref(false);
-emitter.on("downloadAll", async () => {
+emitter.on("wv:downloadAll", async () => {
   let allData = [];
   exporting.value = true;
   for (let i = 0; i < pageCount.value; i++) {
@@ -65,7 +65,7 @@ emitter.on("downloadAll", async () => {
 });
 // 搜索事件
 let searchParams = {};
-emitter.on("wvSearch", (params) => {
+emitter.on("wv:search", (params) => {
   searchParams = params;
   page = 1;
   load();
@@ -74,7 +74,7 @@ const opType = ref("add");
 // 新增一项
 const formData = ref({});
 const isShowAddDialog = ref(false);
-emitter.on("wvAdd", () => {
+emitter.on("wv:add", () => {
   opType.value = "add";
   config.addConf.forEach((item) => {
     formData.value[item.prop] = item.value || "";
@@ -140,7 +140,7 @@ const deleteHandler = (row) => {
               type: "error",
             });
           }
-          emitter.emit("delete", res);
+          emitter.emit("wv:delete", res);
         });
     },
   });
@@ -239,7 +239,7 @@ const load = (currentPage) => {
         }
         // 非导出
         if (!currentPage) {
-          emitter.emit("dataLoad", res);
+          emitter.emit("wv:dataLoad", res);
         }
       });
   });
@@ -274,8 +274,8 @@ const pageChangeHandler = (currPage) => {
             <wd-button-group>
               <wd-button
                 v-for="(button, index) in slotScope.column.buttons"
-                :ke="index"
-                :size="button.size"
+                :key="index"
+                :size="button.size || 'small'"
                 :type="button.type"
                 @click="button.click"
                 >{{ button.text }}

@@ -14,7 +14,7 @@ onMounted(() => {
       type: "primary",
       text: "新增",
       click() {
-        emitter.emit("wvAdd");
+        emitter.emit("wv:add");
       },
     });
   }
@@ -33,7 +33,7 @@ onMounted(() => {
           type: "primary",
           text: "导出当前页",
           click() {
-            emitter.emit("download");
+            emitter.emit("wv:download");
           },
         },
         "|",
@@ -46,14 +46,14 @@ onMounted(() => {
           type: "primary",
           text: "导出全部",
           click() {
-            emitter.emit("downloadAll");
+            emitter.emit("wv:downloadAll");
           },
         },
         {
           type: "primary",
           text: "导出当前页",
           click() {
-            emitter.emit("download");
+            emitter.emit("wv:download");
           },
         },
         "|",
@@ -106,7 +106,7 @@ const readExcel = (file) => {
           :type="button.type"
           :icon="button.icon"
           :loading="button.loading"
-          :size="button.size"
+          :size="button.size || 'small'"
         >
           {{ button.text }}
         </wd-button>
@@ -123,7 +123,7 @@ const readExcel = (file) => {
         :type="button.type"
         :icon="button.icon"
         :loading="button.loading"
-        :size="button.size"
+        :size="button.size || 'small'"
         >{{ button.text }}</wd-button
       >
     </template>
