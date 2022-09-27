@@ -73,4 +73,7 @@ const filterMap = {
 .popper {
   z-index: 999999 !important;
 }
+.wd-form-inline .wd-form-item-with-help {
+  margin-bottom: 5px !important;
+}
 </style>

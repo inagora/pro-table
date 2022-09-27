@@ -26,7 +26,7 @@ const tableColumns = [
     sorter: (val) => {
       getSortData(val);
     },
-    visible: true, // 是否可见
+    visible: false, // 是否可见
     exportable: false, // 是否可导出
   },
   {
@@ -118,6 +118,7 @@ onMounted(() => {
     addUrl: "http://123.57.68.108:8080",
     updateUrl: "http://123.57.68.108:8080",
     deleteUrl: "http://123.57.68.108:8080",
+    batchDelete: true,
     addConf: [
       {
         type: "text",
@@ -205,7 +206,7 @@ onMounted(() => {
         },
       },
       {
-        type: "upload",
+        type: "primary",
         subtype: "upload",
         text: "上传文件",
         click(val) {

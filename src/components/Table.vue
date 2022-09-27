@@ -15,6 +15,18 @@ import download from "../utils/Download.js";
 import { isObject } from "../utils/util.js";
 
 const config = inject("config");
+const wvTable = ref(null);
+// 处理后的列，比如隐藏
+const exportableColumns = [];
+const _columns = [];
+config.columns.forEach((column) => {
+  if (column.visible || column.visible === undefined) {
+    _columns.push(column);
+  }
+  if (!column.exportable) {
+    exportableColumns.push(column);
+  }
+});
 // 如果设置了updateUrl,但是没有设置editConf,则使用addConf
 if (config.updateUrl && !config.editConf) {
   config.editConf = config.addConf;
@@ -41,14 +53,14 @@ const flexColumnWidth = (str) => {
   return flexWidth;
 };
 if (config.autoWidth) {
-  config.columns.forEach((column) => {
+  _columns.forEach((column) => {
     column.width = flexColumnWidth(column.title);
   });
 }
 
 const emitter = inject("emitter");
 emitter.on("wv:download", () => {
-  download(config.columns, records.value);
+  download(exportableColumns, records.value);
 });
 const exportPage = ref(1);
 const exporting = ref(false);
@@ -61,7 +73,7 @@ emitter.on("wv:downloadAll", async () => {
     allData = allData.concat(pageData);
   }
   exporting.value = false;
-  download(config.columns, allData);
+  download(exportableColumns, allData);
 });
 // 搜索事件
 let searchParams = {};
@@ -114,7 +126,7 @@ const editHandler = () => {
   isShowAddDialog.value = true;
 };
 // 删除
-const deleteHandler = (row) => {
+const deleteHandler = (id) => {
   WdModal.confirm({
     title: "提示",
     type: "danger",
@@ -126,7 +138,7 @@ const deleteHandler = (row) => {
           url: config.deleteUrl,
           method: "POST",
           data: {
-            [config.idIndex]: row[config.idIndex],
+            [config.idIndex]: id,
           },
         })
         .then((res) => {
@@ -145,6 +157,18 @@ const deleteHandler = (row) => {
     },
   });
 };
+// 批量删除
+emitter.on("wv:batchDelete", () => {
+  const selectedRows = wvTable.value.getSelectedRows();
+  if (!selectedRows || selectedRows.length === 0) {
+    WdMessage({
+      message: "选择要删除的项",
+      type: "warning",
+    });
+    return;
+  }
+  deleteHandler(selectedRows.map((row) => row[config.idIndex]));
+});
 let allFixedRightEls;
 let allFixedLeftEls;
 onMounted(() => {
@@ -203,12 +227,17 @@ const records = ref([]);
 const loading = ref(false);
 const pageCount = ref(1);
 let page = 1;
+const lastIndex = ""; // 瀑布流模式的最后一项
 const ajax = new Ajax(config.ajaxSetting);
 const load = (currentPage) => {
   // let searchParams = {
   //   page: currentPage || page,
   // };
-  searchParams.page = currentPage || page;
+  if (config.pageMode === "waterfall") {
+    searchParams[config.idIndex] = lastIndex;
+  } else {
+    searchParams.page = currentPage || page;
+  }
   // emit返回值接收不到，有问题待解决
   // if (!currentPage) {
   //   let result = emitter.emit("beforeDataRequest", searchParams);
@@ -233,6 +262,8 @@ const load = (currentPage) => {
         if (res && res.data.list) {
           records.value = res.data.list;
           pageCount.value = res.data.page_count;
+          lastIndex =
+            res.data.list[res.data.list.length - 1][config.idIndex] || "";
           resolve(res.data.list);
         } else {
           reject(res);
@@ -261,8 +292,8 @@ const pageChangeHandler = (currPage) => {
       "
     >
       <wd-table
-        ref="wdTable"
-        :columns="config.columns"
+        ref="wvTable"
+        :columns="_columns"
         :data-source="records"
         :page-count="pageCount"
         text="数据加载中"
@@ -291,7 +322,7 @@ const pageChangeHandler = (currPage) => {
                 v-if="config.deleteUrl"
                 size="small"
                 type="danger"
-                @click="deleteHandler(slotScope.row)"
+                @click="deleteHandler(slotScope.row[config.idIndex])"
                 >删除
               </wd-button>
             </wd-button-group>

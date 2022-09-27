@@ -66,6 +66,10 @@ const conf = Object.assign(
      */
     deleteUrl: "",
     /**
+     * 批量删除
+     */
+    batchDelete: false,
+    /**
      * 更新url
      */
     updateUrl: "",

@@ -60,6 +60,16 @@ onMounted(() => {
       ]
     );
   }
+  // 批量删除按钮
+  if (config.deleteUrl && config.batchDelete) {
+    toolbarBtns.value.unshift({
+      type: "danger",
+      text: "批量删除",
+      click() {
+        emitter.emit("wv:batchDelete");
+      },
+    });
+  }
 });
 // upload按钮，仅支持xlsx或者csv，自动解析出json数据
 const uploadInput = ref(null);
