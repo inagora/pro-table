@@ -171,9 +171,14 @@ emitter.on("wv:batchDelete", () => {
 });
 let allFixedRightEls;
 let allFixedLeftEls;
-onMounted(() => {
+onMounted(async () => {
   if (config.autoRequest) {
-    load();
+    await load();
+  }
+  if (config.pageMode === "waterfall") {
+    document.querySelectorAll(".wd-pagination-item").forEach((item) => {
+      item.style.display = "none";
+    });
   }
   document
     .querySelector(".wv-table")
@@ -227,7 +232,13 @@ const records = ref([]);
 const loading = ref(false);
 const pageCount = ref(1);
 let page = 1;
-const lastIndex = ""; // 瀑布流模式的最后一项
+let count = 5;
+let clickDirection = "prev";
+let lastIndex = ""; // 瀑布流模式的最后一项
+// count 默认20条
+if (config.ajaxSetting.count) {
+  count = config.ajaxSetting.count;
+}
 const ajax = new Ajax(config.ajaxSetting);
 const load = (currentPage) => {
   // let searchParams = {
@@ -238,6 +249,7 @@ const load = (currentPage) => {
   } else {
     searchParams.page = currentPage || page;
   }
+  searchParams.count = count;
   // emit返回值接收不到，有问题待解决
   // if (!currentPage) {
   //   let result = emitter.emit("beforeDataRequest", searchParams);
@@ -260,10 +272,22 @@ const load = (currentPage) => {
       .then((res) => {
         loading.value = false;
         if (res && res.data.list) {
+          if (clickDirection === "prev") {
+            if (!res.data.list || res.data.list.length === 0) {
+              document
+                .querySelector(".wd-pagination-prev")
+                .classList.remove("wd-pagination-disabled");
+              return;
+            }
+          } else {
+            if (res.data.list.length < Math.abs(count)) {
+              document
+                .querySelector(".wd-pagination-next")
+                .classList.add("wd-pagination-disabled");
+            }
+          }
           records.value = res.data.list;
-          pageCount.value = res.data.page_count;
-          lastIndex =
-            res.data.list[res.data.list.length - 1][config.idIndex] || "";
+          pageCount.value = 3;
           resolve(res.data.list);
         } else {
           reject(res);
@@ -278,6 +302,22 @@ const load = (currentPage) => {
 const pageChangeHandler = (currPage) => {
   page = currPage;
   load();
+};
+const prevClick = () => {
+  lastIndex = records.value[0][config.idIndex] || "";
+  clickDirection = "prev";
+  count = -Math.abs(count);
+  document
+    .querySelector(".wd-pagination-next")
+    .classList.remove("wd-pagination-disabled");
+};
+const nextClick = () => {
+  lastIndex = records.value[records.value.length - 1][config.idIndex] || "";
+  clickDirection = "next";
+  count = Math.abs(count);
+  document
+    .querySelector(".wd-pagination-prev")
+    .classList.remove("wd-pagination-disabled");
 };
 </script>
 
@@ -296,9 +336,12 @@ const pageChangeHandler = (currPage) => {
         :columns="_columns"
         :data-source="records"
         :page-count="pageCount"
+        :is-show-page="false"
         text="数据加载中"
         empty-text="现在还没有数据噢~"
         @current-change="pageChangeHandler"
+        @prev-click="prevClick"
+        @next-click="nextClick"
       >
         <template v-slot:custom="slotScope">
           <template v-if="slotScope.column.dataIndex === 'action'">

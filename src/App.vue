@@ -26,7 +26,7 @@ const tableColumns = [
     sorter: (val) => {
       getSortData(val);
     },
-    visible: false, // 是否可见
+    visible: true, // 是否可见
     exportable: false, // 是否可导出
   },
   {
@@ -112,6 +112,7 @@ onMounted(() => {
     columns: tableColumns,
     downloadable: true,
     autoRequest: true,
+    pageMode: "waterfall",
     // autoWidth: true,
     // records: dataList,
     url: "http://123.57.68.108:8080",

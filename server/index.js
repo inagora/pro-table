@@ -16,11 +16,23 @@ app.use((ctx) => {
   ctx.set({
     "Content-Type": "application/json; charset=utf-8",
   });
+  let count = ctx.query.count;
+  let id = ctx.query.id;
+  console.log(id);
+  let idIndex = goodsList.findIndex(item => item.id === id);
+  console.log(idIndex);
+  if(idIndex < 0) idIndex = 0;
+  let resultList = []
+  if(count > 0) {
+    resultList = goodsList.slice(idIndex + 1, idIndex + parseInt(count))
+  } else {
+    resultList = goodsList.slice(idIndex + parseInt(count), idIndex + 1)
+  }
   ctx.body = {
     data: {
-      list: goodsList,
+      list: resultList,
       total: 100,
-      page_count: 5,
+      page_count: 1,
       page: 1,
     },
   };

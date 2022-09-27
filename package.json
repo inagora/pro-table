@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/inagora/pro-table#readme",
   "dependencies": {
-    "@inagora/wd-view": "^1.0.4",
+    "@inagora/wd-view": "^1.0.5",
     "mitt": "^3.0.0",
     "vue": "^3.2.37"
   },

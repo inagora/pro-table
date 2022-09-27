@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@inagora/wd-view': ^1.0.4
+  '@inagora/wd-view': ^1.0.5
   '@vitejs/plugin-vue': ^3.0.0
   eslint: ^8.0.1
   eslint-config-standard: ^17.0.0
@@ -22,7 +22,7 @@ specifiers:
   vue: ^3.2.37
 
 dependencies:
-  '@inagora/wd-view': 1.0.4_vue@3.2.37
+  '@inagora/wd-view': 1.0.5_vue@3.2.37
   mitt: 3.0.0
   vue: 3.2.37
 
@@ -171,8 +171,8 @@ packages:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
 
-  /@inagora/wd-view/1.0.4_vue@3.2.37:
-    resolution: {integrity: sha512-GHhH1IOtobMFIE1z4XtypytksnyK8vN4gvDoDMcX3WnqCzeJbi91ucFfrWd8MVnS38wsoq63P+U/v3hBofm6fA==}
+  /@inagora/wd-view/1.0.5_vue@3.2.37:
+    resolution: {integrity: sha512-zqePbmeRyFc+rehgawtE0dPg4ZCqv4lAhhGGiTRHLCgH3mbTCw1fVtLJjwFBj0bAtXEtrM+v8P1SAsMvDUaaZw==}
     dependencies:
       '@babel/runtime': 7.18.9
       '@popperjs/core': 2.11.5
@@ -613,7 +613,7 @@ packages:
     dev: false
 
   /component-indexof/0.0.3:
-    resolution: {integrity: sha1-EdCRMSI5648yyPJa6csAL/6NPCQ=}
+    resolution: {integrity: sha512-puDQKvx/64HZXb4hBwIcvQLaLgux8o1CbWl39s41hrIIZDl1lJiD5jc22gj3RBeGK0ovxALDYpIbyjqDUUl0rw==}
     dev: false
 
   /concat-map/0.0.1:
