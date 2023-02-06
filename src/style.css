@@ -94,19 +94,18 @@ button:focus-visible {
   position: sticky;
   top: 0;
   width: 100%;
-  z-index: 99999;
+  z-index: 501;
 }
 .wd-table-content {
   height: 100%;
 }
-.wd-table-body {
+/* .wd-table-body {
   padding-bottom: 50px;
-}
+} */
 .wd-pagination {
-  position: fixed;
+  z-index: 501 !important;
+  position: sticky;
   bottom: 0;
-  width: 100%;
-  z-index: 99999;
 }
 .wd-table-fixed-left, .wd-table-fixed-right {
   top: unset !important;

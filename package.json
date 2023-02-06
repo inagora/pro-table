@@ -1,6 +1,6 @@
 {
   "name": "pro-table",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-beta",
   "description": "基于wd-view的，集form、table、toolbar为一体的table组件",
   "main": "main.js",
   "type": "module",
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/inagora/pro-table#readme",
   "dependencies": {
-    "@inagora/wd-view": "^1.0.5",
+    "@inagora/wd-view": "1.2.0",
     "mitt": "^3.0.0",
     "vue": "^3.2.37"
   },

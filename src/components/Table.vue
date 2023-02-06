@@ -399,8 +399,3 @@ const nextClick = () => {
   overflow-y: scroll;
 }
 </style>
-<style>
-.wd-dialog-mask {
-  z-index: 999999 !important;
-}
-</style>

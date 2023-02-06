@@ -25,6 +25,7 @@ export function init(config) {
     },
   });
   app.mount(el);
+  app.config.warnHandler = () => null;
   const vnode = createVNode(ProTable, { config });
   render(vnode, el);
   return app;
