@@ -23,10 +23,18 @@ export function init(config) {
     data() {
       return config;
     },
+    methods: {
+      refresh() {
+        vnode.component.exposed.refresh();
+      },
+    },
   });
   app.config.warnHandler = () => null;
   app.mount(el);
   const vnode = createVNode(ProTable, { config });
   render(vnode, el);
+  app.refresh = () => {
+    app._component.methods.refresh();
+  };
   return app;
 }

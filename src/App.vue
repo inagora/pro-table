@@ -236,10 +236,10 @@ onMounted(() => {
     toolbar: [
       {
         type: "primary",
-        text: "导出1",
+        text: "刷新",
         // loading: true,
         click() {
-          console.log(123);
+          app.refresh();
         },
       },
       {

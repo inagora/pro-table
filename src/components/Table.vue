@@ -1,3 +1,8 @@
+<script>
+export default {
+  name: "wvTable",
+};
+</script>
 <script setup>
 import { inject, onMounted, onUnmounted, ref } from "vue";
 import {
@@ -250,11 +255,9 @@ const load = (currentPage) => {
     searchParams.page = currentPage || page;
   }
   searchParams.count = count;
-  // emit返回值接收不到，有问题待解决
   if (!currentPage) {
     emitter.emit("beforeDataRequest", searchParams);
     emitter.on("wv:beforeDataRequest", (val) => {
-      console.log(val);
       searchParams = Object.assign({}, searchParams, val);
     });
   }
@@ -321,6 +324,10 @@ const nextClick = () => {
     .querySelector(".wd-pagination-prev")
     .classList.remove("wd-pagination-disabled");
 };
+// 暴露事件
+defineExpose({
+  load,
+});
 </script>
 
 <template>

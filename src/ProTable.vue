@@ -1,5 +1,5 @@
 <script setup>
-import { provide, onUnmounted } from "vue";
+import { provide, onUnmounted, ref } from "vue";
 import mitt from "mitt";
 const emitter = mitt();
 import Table from "./components/Table.vue";
@@ -138,6 +138,14 @@ emitter.on("*", (type, e) => {
     }
   }
 });
+// table组件
+const wvTable = ref(null);
+const refresh = () => {
+  wvTable.value[0].load();
+};
+defineExpose({
+  refresh,
+});
 onUnmounted(() => {
   emitter.all.clear();
 });
@@ -146,7 +154,7 @@ onUnmounted(() => {
 <template>
   <div ref="wvProTable" class="wv-pro-table">
     <template v-for="(com, index) in components" :key="index">
-      <component :is="com"></component>
+      <component :ref="com.name" :is="com"></component>
     </template>
   </div>
 </template>
