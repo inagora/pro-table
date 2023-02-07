@@ -317,7 +317,8 @@ onMounted(() => {
       },
       beforeDataRequest(data) {
         console.log(data);
-        return true;
+        data.page = 3;
+        return data;
       },
       // beforeAdd() {},
       // beforeEdit() {},

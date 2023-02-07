@@ -251,53 +251,55 @@ const load = (currentPage) => {
   }
   searchParams.count = count;
   // emit返回值接收不到，有问题待解决
-  // if (!currentPage) {
-  //   let result = emitter.emit("beforeDataRequest", searchParams);
-  //   if (!result) return;
-  //   if (isObject(result)) {
-  //     searchParams = Object.assign({}, searchParams, result);
-  //   }
-  // }
+  if (!currentPage) {
+    emitter.emit("beforeDataRequest", searchParams);
+    emitter.on("wv:beforeDataRequest", (val) => {
+      console.log(val);
+      searchParams = Object.assign({}, searchParams, val);
+    });
+  }
   loading.value = true;
   if (config.records) {
     records.value = config.records;
     return;
   }
-  return new Promise((resolve, reject) => {
-    ajax
-      .request({
-        url: config.url,
-        data: searchParams,
-      })
-      .then((res) => {
-        loading.value = false;
-        if (res && res.data.list) {
-          if (clickDirection === "prev") {
-            if (!res.data.list || res.data.list.length === 0) {
-              document
-                .querySelector(".wd-pagination-prev")
-                .classList.remove("wd-pagination-disabled");
-              return;
+  setTimeout(() => {
+    return new Promise((resolve, reject) => {
+      ajax
+        .request({
+          url: config.url,
+          data: searchParams,
+        })
+        .then((res) => {
+          loading.value = false;
+          if (res && res.data.list) {
+            if (clickDirection === "prev") {
+              if (!res.data.list || res.data.list.length === 0) {
+                document
+                  .querySelector(".wd-pagination-prev")
+                  .classList.remove("wd-pagination-disabled");
+                return;
+              }
+            } else {
+              if (res.data.list.length < Math.abs(count)) {
+                document
+                  .querySelector(".wd-pagination-next")
+                  .classList.add("wd-pagination-disabled");
+              }
             }
+            records.value = res.data.list;
+            pageCount.value = 3;
+            resolve(res.data.list);
           } else {
-            if (res.data.list.length < Math.abs(count)) {
-              document
-                .querySelector(".wd-pagination-next")
-                .classList.add("wd-pagination-disabled");
-            }
+            reject(res);
           }
-          records.value = res.data.list;
-          pageCount.value = 3;
-          resolve(res.data.list);
-        } else {
-          reject(res);
-        }
-        // 非导出
-        if (!currentPage) {
-          emitter.emit("wv:dataLoad", res);
-        }
-      });
-  });
+          // 非导出
+          if (!currentPage) {
+            emitter.emit("dataLoad", res);
+          }
+        });
+    });
+  }, 0);
 };
 const pageChangeHandler = (currPage) => {
   page = currPage;

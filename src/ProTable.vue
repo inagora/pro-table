@@ -124,7 +124,18 @@ provide("config", conf);
 provide("emitter", emitter);
 emitter.on("*", (type, e) => {
   if (config.listeners && config.listeners[type]) {
-    return config.listeners[type](e);
+    // emmiter.emit没办法接收返回值，暂时用此法解决
+    if (type === "beforeDataRequest") {
+      setTimeout(() => {
+        Promise.resolve(config.listeners[type](e)).then((val) => {
+          if (val !== false) {
+            emitter.emit("wv:beforeDataRequest", val);
+          }
+        });
+      }, 0);
+    } else {
+      config.listeners[type](e);
+    }
   }
 });
 onUnmounted(() => {
