@@ -1,5 +1,7 @@
 <script setup>
 import { inject, ref } from "vue";
+import ADatePicker from "ant-design-vue/lib/date-picker";
+import "ant-design-vue/lib/date-picker/style/index.css";
 import {
   WdForm,
   WdFormItem,
@@ -18,7 +20,7 @@ const emitter = inject("emitter");
 const filterMap = {
   text: WdInput,
   datetime: WdDatePicker,
-  date: WdDatePicker,
+  date: ADatePicker,
   number: WdInputNumber,
   select: WdSelect,
   checkbox: WdCheckbox,
@@ -31,6 +33,9 @@ config.searchFilters.forEach((filter) => {
 });
 const searchHandler = () => {
   emitter.emit("wv:search", formData.value);
+};
+const changeHandler = (val, fn) => {
+  fn && fn(val);
 };
 // formConf
 // 自定义搜索
@@ -52,20 +57,13 @@ const searchHandler = () => {
         :label="filter.label"
         :prop="filter.prop"
       >
-        <component
-          v-if="filter.type !== 'select'"
-          :is="filterMap[filter.type]"
-          :placeholder="filter.placeholder"
-          :value="formData[filter.prop]"
-          v-model="formData[filter.prop]"
-        >
-        </component>
         <wd-select
-          v-else
+          v-if="filter.type === 'select'"
           :is="filterMap[filter.type]"
           :placeholder="filter.placeholder"
           :value="formData[filter.prop]"
           v-model="formData[filter.prop]"
+          @change="changeHandler($event, filter.change)"
         >
           <wd-option
             v-for="(option, index) in filter.list"
@@ -74,6 +72,21 @@ const searchHandler = () => {
             :value="option.value"
           ></wd-option>
         </wd-select>
+        <a-date-picker
+          v-else-if="filter.type === 'date'"
+          :value="formData[filter.prop]"
+          v-model:value="formData[filter.prop]"
+          v-bind="filter.options"
+          :size="filter.options.size || 'small'"
+        ></a-date-picker>
+        <component
+          v-else
+          :is="filterMap[filter.type]"
+          :placeholder="filter.placeholder"
+          :value="formData[filter.prop]"
+          v-model="formData[filter.prop]"
+        >
+        </component>
       </wd-form-item>
       <wd-form-item label="">
         <div class="wv-search-btns">

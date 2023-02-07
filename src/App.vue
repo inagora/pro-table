@@ -186,25 +186,57 @@ onMounted(() => {
       },
       {
         type: "select",
+        placeholder: "请选择",
+        label: "年份",
+        prop: "year",
+        list: [
+          {
+            label: "2022",
+            value: "2022",
+          },
+          {
+            label: "2023",
+            value: "2023",
+          },
+        ],
+        change(val) {
+          console.log(app._instance.ctx.searchFilters[4].list);
+          app._instance.ctx.searchFilters[4].list = [
+            {
+              label: "研究生",
+              value: 1,
+            },
+            {
+              label: "本科",
+              value: 2,
+            },
+          ];
+        },
+      },
+      {
+        type: "select",
         placeholder: "请选择学历",
         label: "学历",
         prop: "education",
-        list: [
-          {
-            label: "研究生",
-            value: 1,
-          },
-          {
-            label: "本科",
-            value: 2,
-          },
-        ],
+        change(val) {
+          console.log(val);
+        },
+      },
+      {
+        type: "date",
+        placeholder: "请选择时间",
+        label: "开始时间",
+        prop: "start_time",
+        options: {
+          format: "YYYY/MM/DD",
+          valueFormat: "YYYY-MM-DD",
+        },
       },
     ],
     toolbar: [
       {
         type: "primary",
-        text: "导出",
+        text: "导出1",
         // loading: true,
         click() {
           console.log(123);
@@ -212,7 +244,7 @@ onMounted(() => {
       },
       {
         type: "primary",
-        text: "导出全部",
+        text: "导出全部1",
         // loading: true,
         click() {
           console.log(123);
@@ -237,7 +269,7 @@ onMounted(() => {
       },
       {
         type: "primary",
-        text: "导出",
+        text: "导出2",
         // loading: true,
         click() {
           console.log(123);
@@ -245,7 +277,7 @@ onMounted(() => {
       },
       {
         type: "primary",
-        text: "导出全部",
+        text: "导出全部2",
         // loading: true,
         click() {
           console.log(123);

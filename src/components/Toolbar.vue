@@ -27,19 +27,20 @@ onMounted(() => {
 
   if (config.downloadable && config.downloadable === "single") {
     // 导出当前页
-    toolbarBtns.value.unshift(
-      ...[
-        {
-          type: "primary",
-          text: "导出当前页",
-          click() {
-            emitter.emit("wv:download");
-          },
-        },
-        "|",
-      ]
-    );
+    if (toolbarBtns.value.length > 0) {
+      toolbarBtns.value.unshift("|");
+    }
+    toolbarBtns.value.unshift({
+      type: "primary",
+      text: "导出当前页",
+      click() {
+        emitter.emit("wv:download");
+      },
+    });
   } else if (config.downloadable) {
+    if (toolbarBtns.value.length > 0) {
+      toolbarBtns.value.unshift("|");
+    }
     toolbarBtns.value.unshift(
       ...[
         {
@@ -56,7 +57,6 @@ onMounted(() => {
             emitter.emit("wv:download");
           },
         },
-        "|",
       ]
     );
   }

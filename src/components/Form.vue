@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import ADatePicker from "ant-design-vue/lib/date-picker";
 import {
   WdForm,
   WdFormItem,
@@ -22,12 +23,15 @@ const formData = ref(props.modelValue);
 const filterMap = {
   text: WdInput,
   datetime: WdDatePicker,
-  date: WdDatePicker,
+  date: ADatePicker,
   number: WdInputNumber,
   select: WdSelect,
   checkbox: WdCheckbox,
   switch: WdSwitch,
   radio: WdRadio,
+};
+const changeHandler = (val, fn) => {
+  fn && fn(val);
 };
 </script>
 
@@ -53,6 +57,7 @@ const filterMap = {
           :placeholder="filter.placeholder"
           :value="formData[filter.prop]"
           v-model="formData[filter.prop]"
+          @change="changeHandler($event, filter.change)"
         >
           <wd-option
             v-for="(option, index) in filter.list"
@@ -61,6 +66,13 @@ const filterMap = {
             :value="option.value"
           ></wd-option>
         </wd-select>
+        <a-date-picker
+          v-else-if="filter.type === 'date'"
+          :value="formData[filter.prop]"
+          v-model:value="formData[filter.prop]"
+          v-bind="filter.options"
+          :size="filter.options.size || 'small'"
+        ></a-date-picker>
         <component
           v-else
           :is="filterMap[filter.type]"

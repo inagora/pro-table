@@ -17,7 +17,7 @@ export default defineConfig({
     "process.env": {},
   },
   rollupOptions: {
-    external: ["vue", "@inagora/wd-view"],
+    external: ["vue", "@inagora/wd-view", "ant-design-vue"],
     output: {
       globals: {
         vue: "Vue",
