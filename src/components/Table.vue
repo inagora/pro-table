@@ -336,7 +336,7 @@ const nextClick = () => {
         :columns="_columns"
         :data-source="records"
         :page-count="pageCount"
-        :is-show-page="false"
+        :height="config.tableHeight"
         text="数据加载中"
         empty-text="现在还没有数据噢~"
         @current-change="pageChangeHandler"
@@ -396,6 +396,6 @@ const nextClick = () => {
 .wv-table {
   flex: 1;
   width: 100%;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
 }
 </style>

@@ -65,6 +65,26 @@ const tableColumns = [
     key: "update_time",
   },
   {
+    title: "更新时间",
+    dataIndex: "update_time",
+    key: "update_time",
+  },
+  {
+    title: "更新时间",
+    dataIndex: "update_time",
+    key: "update_time",
+  },
+  {
+    title: "更新时间",
+    dataIndex: "update_time",
+    key: "update_time",
+  },
+  {
+    title: "更新时间",
+    dataIndex: "update_time",
+    key: "update_time",
+  },
+  {
     title: "操作",
     dataIndex: "action",
     key: "action",
@@ -107,12 +127,13 @@ setTimeout(() => {
 onMounted(() => {
   const app = init({
     el: "#wd-table",
-    title: "pro-table",
-    tips: "<div>tips</div>",
+    // title: "pro-table",
+    // tips: "<div>tips</div>",
     columns: tableColumns,
     downloadable: true,
     autoRequest: true,
-    pageMode: "waterfall",
+    // tableHeight: "100px",
+    // pageMode: "waterfall",
     // autoWidth: true,
     // records: dataList,
     url: "http://123.57.68.108:8080",
@@ -276,6 +297,5 @@ onMounted(() => {
       // beforeDownload(params) {},
     },
   });
-  console.log(app);
 });
 </script>

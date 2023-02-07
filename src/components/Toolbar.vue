@@ -105,7 +105,7 @@ const readExcel = (file) => {
 </script>
 
 <template>
-  <div class="wv-toolbar">
+  <div v-if="toolbarBtns.length > 0" class="wv-toolbar">
     <template v-for="(button, index) in toolbarBtns" :key="index">
       <div v-if="button === '|'" class="wv-toolbar-separator">&nbsp;</div>
       <div

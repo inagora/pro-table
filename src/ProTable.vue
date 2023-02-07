@@ -113,6 +113,10 @@ const conf = Object.assign(
      * 操作需要的主键
      */
     idIndex: "id",
+    /**
+     * table部分高度
+     */
+    tableHeight: "",
   },
   config
 );

@@ -53,20 +53,27 @@ const searchHandler = () => {
         :prop="filter.prop"
       >
         <component
+          v-if="filter.type !== 'select'"
           :is="filterMap[filter.type]"
           :placeholder="filter.placeholder"
           :value="formData[filter.prop]"
           v-model="formData[filter.prop]"
         >
-          <template v-if="filter.list">
-            <wd-option
-              v-for="(option, index) in filter.list"
-              :key="index"
-              :label="option.label"
-              :value="option.value"
-            ></wd-option>
-          </template>
         </component>
+        <wd-select
+          v-else
+          :is="filterMap[filter.type]"
+          :placeholder="filter.placeholder"
+          :value="formData[filter.prop]"
+          v-model="formData[filter.prop]"
+        >
+          <wd-option
+            v-for="(option, index) in filter.list"
+            :key="index"
+            :label="option.label"
+            :value="option.value"
+          ></wd-option>
+        </wd-select>
       </wd-form-item>
       <wd-form-item label="">
         <div class="wv-search-btns">

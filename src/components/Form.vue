@@ -47,20 +47,27 @@ const filterMap = {
         :label="filter.label"
         :prop="filter.prop"
       >
-        <component
+        <wd-select
+          v-if="filter.type === 'select'"
           :is="filterMap[filter.type]"
           :placeholder="filter.placeholder"
           :value="formData[filter.prop]"
           v-model="formData[filter.prop]"
         >
-          <template v-if="filter.list">
-            <wd-option
-              v-for="(option, index) in filter.list"
-              :key="index"
-              :label="option.label"
-              :value="option.value"
-            ></wd-option>
-          </template>
+          <wd-option
+            v-for="(option, index) in filter.list"
+            :key="index"
+            :label="option.label"
+            :value="option.value"
+          ></wd-option>
+        </wd-select>
+        <component
+          v-else
+          :is="filterMap[filter.type]"
+          :placeholder="filter.placeholder"
+          :value="formData[filter.prop]"
+          v-model="formData[filter.prop]"
+        >
         </component>
       </wd-form-item>
     </wd-form>

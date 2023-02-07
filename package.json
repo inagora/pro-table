@@ -2,8 +2,12 @@
   "name": "pro-table",
   "version": "1.0.0-beta",
   "description": "基于wd-view的，集form、table、toolbar为一体的table组件",
-  "main": "main.js",
+  "main": "dist/index.umd.cjs",
   "type": "module",
+  "files": [
+    "dist/index.js",
+    "dist/style.css"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",

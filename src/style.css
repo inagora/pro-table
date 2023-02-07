@@ -78,9 +78,9 @@ button:focus-visible {
   }
 }
 
-.wd-table {
+/* .wd-table {
   overflow: unset !important;
-}
+} */
 
 .wv-toolbar-separator {
   display: inline-block;
@@ -102,11 +102,11 @@ button:focus-visible {
 /* .wd-table-body {
   padding-bottom: 50px;
 } */
-.wd-pagination {
+/* .wd-pagination {
   z-index: 501 !important;
   position: sticky;
   bottom: 0;
 }
 .wd-table-fixed-left, .wd-table-fixed-right {
   top: unset !important;
-}
+} */

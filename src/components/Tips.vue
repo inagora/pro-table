@@ -4,7 +4,7 @@ const config = inject("config");
 </script>
 
 <template>
-  <div class="wv-tips" v-html="config.tips"></div>
+  <div v-if="config.tips" class="wv-tips" v-html="config.tips"></div>
 </template>
 <style scoped>
 .wv-tips {

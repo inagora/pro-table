@@ -4,7 +4,7 @@ const config = inject("config");
 </script>
 
 <template>
-  <div class="wv-title">
+  <div v-if="config.title" class="wv-title">
     {{ config.title }}
   </div>
 </template>
