@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import ADatePicker from "ant-design-vue/lib/date-picker";
+import "ant-design-vue/lib/date-picker/style/index.css";
 import {
   WdForm,
   WdFormItem,
@@ -85,14 +86,3 @@ const changeHandler = (val, fn) => {
     </wd-form>
   </div>
 </template>
-<style>
-.wd-select {
-  width: 150px !important;
-}
-.popper {
-  z-index: 999999 !important;
-}
-.wd-form-inline .wd-form-item-with-help {
-  margin-bottom: 5px !important;
-}
-</style>

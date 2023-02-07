@@ -143,14 +143,11 @@ const readExcel = (file) => {
 <style scoped>
 .wv-toolbar {
   border-bottom: 1px solid #d0d0d0;
-  padding: 6px 0 0 8px;
+  padding: 6px 8px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-}
-.wd-btn {
-  margin-right: 8px;
-  margin-bottom: 10px;
+  gap: 10px 8px;
 }
 .wv-toolbar-upload-container {
   position: relative;

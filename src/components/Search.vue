@@ -125,17 +125,6 @@ const changeHandler = (val, fn) => {
 .wv-search-btns {
   display: flex;
   align-items: center;
-}
-.wv-toolbar-separator {
-  margin-left: 8px;
-  margin-bottom: 0;
-}
-</style>
-<style>
-.wd-select {
-  width: 150px !important;
-}
-.popper {
-  z-index: 999999 !important;
+  gap: 10px 8px;
 }
 </style>

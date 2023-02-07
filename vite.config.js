@@ -17,11 +17,11 @@ export default defineConfig({
     "process.env": {},
   },
   rollupOptions: {
-    external: ["vue", "@inagora/wd-view", "ant-design-vue"],
+    external: ["vue", "ant-design-vue", "wd-view"],
     output: {
       globals: {
         vue: "Vue",
-        "@inagora/wd-view": "WdView",
+        "wd-view": "WdView",
       },
     },
   },

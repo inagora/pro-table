@@ -237,7 +237,7 @@ const records = ref([]);
 const loading = ref(false);
 const pageCount = ref(1);
 let page = 1;
-let count = 5;
+let count = 20;
 let clickDirection = "prev";
 let lastIndex = ""; // 瀑布流模式的最后一项
 // count 默认20条
