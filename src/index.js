@@ -21,19 +21,20 @@ export function init(config) {
   }
   let app = createApp({
     data() {
-      return { config };
+      return config;
     },
   });
   app.config.warnHandler = () => null;
-  // const vnode = createVNode(ProTable, { config });
-  // render(vnode, el);
-  el.innerHTML = '<pro-table ref="proTable" :config="config"/>';
-  app.component("pro-table", ProTable);
   app.mount(el);
+  const vnode = createVNode(ProTable, { config });
+  render(vnode, el);
+  // el.innerHTML = '<pro-table ref="proTable" :config="config"/>';
+  // app.component("pro-table", ProTable);
+
   // expose method
   app.refresh = () => {
-    // vnode.component.exposed.refresh();
-    app._instance.refs.proTable.refresh();
+    vnode.component.exposed.refresh();
+    // app._instance.refs.proTable.refresh();
   };
   return app;
 }
