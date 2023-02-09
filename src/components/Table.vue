@@ -17,9 +17,11 @@ import {
 import WvForm from "./Form.vue";
 import Ajax from "../utils/Ajax.js";
 import download from "../utils/Download.js";
-import { isObject } from "../utils/util.js";
+import { isFuction, isObject } from "../utils/util.js";
 
 const config = inject("config");
+// 处理列，排除hideInTable的配置
+config.columns = config.columns.filter((item) => !item.hideInTable);
 const wvTable = ref(null);
 // 处理后的列，比如隐藏
 const exportableColumns = [];
@@ -30,6 +32,18 @@ config.columns.forEach((column) => {
   }
   if (!column.exportable) {
     exportableColumns.push(column);
+  }
+  // 设置了valueEnum需要格式化显示的值
+  if (!column.render && column.valueEnum) {
+    let valueEnum = {};
+    if (isFuction(column.valueEnum)) {
+      valueEnum = column.valueEnum();
+    } else {
+      valueEnum = column.valueEnum;
+    }
+    column.render = (_, row) => {
+      return valueEnum[row[column.dataIndex]];
+    };
   }
 });
 // 如果设置了updateUrl,但是没有设置editConf,则使用addConf
@@ -177,9 +191,9 @@ emitter.on("wv:batchDelete", () => {
 let allFixedRightEls;
 let allFixedLeftEls;
 onMounted(async () => {
-  if (config.autoRequest) {
-    await load();
-  }
+  // if (config.autoRequest) {
+  //   await load();
+  // }
   if (config.pageMode === "waterfall") {
     document.querySelectorAll(".wd-pagination-item").forEach((item) => {
       item.style.display = "none";
@@ -348,6 +362,7 @@ defineExpose({
         :height="config.tableHeight"
         text="数据加载中"
         empty-text="现在还没有数据噢~"
+        :pagination="config.showPagination"
         @current-change="pageChangeHandler"
         @prev-click="prevClick"
         @next-click="nextClick"
@@ -360,7 +375,7 @@ defineExpose({
                 :key="index"
                 :size="button.size || 'small'"
                 :type="button.type"
-                @click="button.click"
+                @click="button.click(slotScope)"
                 >{{ button.text }}
               </wd-button>
               <wd-button

@@ -44,3 +44,6 @@ export function isObject(obj) {
 export function isPlainObject(obj) {
   return isObject(obj) && Object.getPrototypeOf(obj) == Object.prototype;
 }
+export function isFuction(obj) {
+  return obj instanceof Function;
+}

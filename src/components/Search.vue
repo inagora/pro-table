@@ -1,5 +1,5 @@
 <script setup>
-import { inject, ref } from "vue";
+import { inject, onMounted, ref } from "vue";
 import ADatePicker from "ant-design-vue/lib/date-picker";
 import "ant-design-vue/lib/date-picker/style/index.css";
 import {
@@ -15,6 +15,7 @@ import {
   WdButton,
   WdInputNumber,
 } from "@inagora/wd-view";
+import { isObject, isFuction } from "../utils/util";
 const config = inject("config");
 const emitter = inject("emitter");
 const filterMap = {
@@ -28,12 +29,60 @@ const filterMap = {
   radio: WdRadio,
 };
 const formData = ref({});
-config.searchFilters.forEach((filter) => {
+const searchFilters = ref([]);
+// format filter
+const formatFilter = (valueEnum) => {
+  return Object.keys(valueEnum).map((key) => {
+    return {
+      label: valueEnum[key],
+      value: key,
+    };
+  });
+};
+config.columns.forEach((column) => {
+  if (
+    !column.hideInSearch &&
+    column.dataIndex &&
+    column.dataIndex !== "action"
+  ) {
+    const filter = {
+      type: column.valueType || "text",
+      placeholder: column.placeholder,
+      label: column.title,
+      prop: column.dataIndex,
+      dateOptions: column.dateOptions || {},
+      list: [],
+      value: column.defaultValue,
+      change: column.change || null,
+    };
+    if (column.valueType === "select") {
+      if (column.valueEnum) {
+        if (isFuction(column.valueEnum)) {
+          const valueEnum = column.valueEnum();
+          if (isObject(valueEnum)) {
+            filter.list = formatFilter(valueEnum);
+          }
+        } else {
+          if (isObject(column.valueEnum)) {
+            filter.list = formatFilter(column.valueEnum);
+          }
+        }
+      }
+    }
+    searchFilters.value.push(filter);
+  }
+});
+searchFilters.value.forEach((filter) => {
   formData.value[filter.prop] = filter.value || "";
 });
 const searchHandler = () => {
   emitter.emit("wv:search", formData.value);
 };
+onMounted(() => {
+  if (config.autoRequest) {
+    searchHandler();
+  }
+});
 const changeHandler = (val, fn) => {
   fn && fn(val);
 };
@@ -52,13 +101,14 @@ const changeHandler = (val, fn) => {
       inline
     >
       <wd-form-item
-        v-for="filter in config.searchFilters"
+        v-for="filter in searchFilters"
         :key="filter.prop"
         :label="filter.label"
         :prop="filter.prop"
       >
         <wd-select
           v-if="filter.type === 'select'"
+          width="150px"
           :is="filterMap[filter.type]"
           :placeholder="filter.placeholder"
           :value="formData[filter.prop]"
@@ -76,8 +126,8 @@ const changeHandler = (val, fn) => {
           v-else-if="filter.type === 'date'"
           :value="formData[filter.prop]"
           v-model:value="formData[filter.prop]"
-          v-bind="filter.options"
-          :size="filter.options.size || 'small'"
+          v-bind="filter.dateOptions"
+          :size="filter.dateOptions?.size || 'small'"
         ></a-date-picker>
         <component
           v-else
@@ -117,14 +167,26 @@ const changeHandler = (val, fn) => {
     </wd-form>
   </div>
 </template>
-<style scoped>
+<style>
 .wv-search {
   border-bottom: 1px solid #d0d0d0;
-  padding: 10px 0 0 10px;
+  padding: 10px 0 10px 10px;
 }
 .wv-search-btns {
   display: flex;
   align-items: center;
   gap: 10px 8px;
+}
+.wd-select {
+  min-width: 150px;
+}
+.wd-form-inline {
+  gap: 10px;
+}
+.wd-form-inline .wd-form-item {
+  margin-right: 0;
+}
+.wd-form-inline .wd-form-item-with-help {
+  margin-bottom: 0;
 }
 </style>

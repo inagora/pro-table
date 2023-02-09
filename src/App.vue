@@ -4,6 +4,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { init } from "./index.js";
+import { WdButton } from "@inagora/wd-view";
 let sortKey = "";
 let dataList = ref([]);
 let total = ref(0);
@@ -19,6 +20,7 @@ setTimeout(() => {
       ctime: "2021-09-26 2021-09-26 2021-09-26 2021-09-26 2021-09-26",
       update_time: "2021-09-26",
       location: "中国",
+      color: i % 2 === 0 ? "red" : "blue",
     });
   }
   total.value = 200;
@@ -69,19 +71,51 @@ onMounted(() => {
         app.refresh();
       },
       render(column, row) {
-        return `<span style="color: red;">${row[column.dataIndex]}</span>`;
+        // return `<span style="color: red;">${row[column.dataIndex]}</span>`;
+        return `<wd-button>${row[column.dataIndex]}</wd-button>`;
+      },
+      valueType: "text", // 表单类型
+      defaultValue: "",
+      valueEnum() {
+        // 对应key的枚举值，减少render
+        return {};
+      },
+    },
+    {
+      title: "颜色",
+      dataIndex: "color",
+      key: "color",
+      // hideInTable: true,
+      // render(column, row) {
+      //   return `<span style="color: red;">${row[column.dataIndex]}</span>`;
+      // },
+      valueType: "select", // 表单类型
+      defaultValue: "red",
+      valueEnum() {
+        // 对应key的枚举值，减少render，但是render的优先级更高
+        return {
+          red: "红色",
+          green: "绿色",
+          blue: "蓝色",
+        };
       },
     },
     {
       title: "生产日期",
       dataIndex: "ctime",
       key: "ctime",
+      valueType: "date",
+      dateOptions: {
+        format: "YYYY/MM/DD",
+        valueFormat: "YYYY-MM-DD",
+      },
       // fixed: "right",
     },
     {
       title: "产地",
       dataIndex: "location",
       key: "location",
+      hideInSearch: true,
     },
     {
       title: "更新时间",
@@ -144,6 +178,7 @@ onMounted(() => {
     updateUrl: "http://123.57.68.108:8080",
     deleteUrl: "http://123.57.68.108:8080",
     batchDelete: true,
+    // showPagination: true,
     addConf: [
       {
         type: "text",

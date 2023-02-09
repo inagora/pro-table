@@ -117,6 +117,10 @@ const conf = Object.assign(
      * table部分高度
      */
     tableHeight: "",
+    /**
+     * 是否显示pagination
+     */
+    showPagination: true,
   },
   config
 );
