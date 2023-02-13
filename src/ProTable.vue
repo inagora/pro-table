@@ -127,18 +127,18 @@ const conf = Object.assign(
 provide("config", conf);
 provide("emitter", emitter);
 emitter.on("*", (type, e) => {
-  if (config.listeners && config.listeners[type]) {
+  if (conf.listeners && conf.listeners[type]) {
     // emmiter.emit没办法接收返回值，暂时用此法解决
     if (type === "beforeDataRequest") {
       setTimeout(() => {
-        Promise.resolve(config.listeners[type](e)).then((val) => {
+        Promise.resolve(conf.listeners[type](e)).then((val) => {
           if (val !== false) {
             emitter.emit("wv:beforeDataRequest", val);
           }
         });
       }, 0);
     } else {
-      config.listeners[type](e);
+      conf.listeners[type](e);
     }
   }
 });

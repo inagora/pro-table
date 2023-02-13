@@ -1,6 +1,8 @@
 <script setup>
 import { inject, onMounted, ref } from "vue";
 import ADatePicker from "ant-design-vue/lib/date-picker";
+import { RangePicker } from "ant-design-vue/lib/date-picker/dayjs";
+import locale from "ant-design-vue/es/date-picker/locale/zh_CN";
 import "ant-design-vue/lib/date-picker/style/index.css";
 import {
   WdForm,
@@ -22,8 +24,10 @@ const filterMap = {
   text: WdInput,
   datetime: WdDatePicker,
   date: ADatePicker,
+  range: RangePicker,
   number: WdInputNumber,
   select: WdSelect,
+  multiple: WdSelect,
   checkbox: WdCheckbox,
   switch: WdSwitch,
   radio: WdRadio,
@@ -55,7 +59,7 @@ config.columns.forEach((column) => {
       value: column.defaultValue,
       change: column.change || null,
     };
-    if (column.valueType === "select") {
+    if (column.valueType === "select" || column.valueType === "multiple") {
       if (column.valueEnum) {
         if (isFuction(column.valueEnum)) {
           const valueEnum = column.valueEnum();
@@ -107,11 +111,12 @@ const changeHandler = (val, fn) => {
         :prop="filter.prop"
       >
         <wd-select
-          v-if="filter.type === 'select'"
+          v-if="filter.type === 'select' || filter.type === 'multiple'"
           width="150px"
           :is="filterMap[filter.type]"
           :placeholder="filter.placeholder"
           :value="formData[filter.prop]"
+          :multiple="filter.type === 'multiple'"
           v-model="formData[filter.prop]"
           @change="changeHandler($event, filter.change)"
         >
@@ -128,7 +133,16 @@ const changeHandler = (val, fn) => {
           v-model:value="formData[filter.prop]"
           v-bind="filter.dateOptions"
           :size="filter.dateOptions?.size || 'small'"
+          :locale="locale"
         ></a-date-picker>
+        <range-picker
+          v-else-if="filter.type === 'range'"
+          :value="formData[filter.prop]"
+          v-model:value="formData[filter.prop]"
+          v-bind="filter.dateOptions"
+          :size="filter.dateOptions?.size || 'small'"
+          :locale="locale"
+        ></range-picker>
         <component
           v-else
           :is="filterMap[filter.type]"

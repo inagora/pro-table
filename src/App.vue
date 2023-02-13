@@ -27,243 +27,250 @@ setTimeout(() => {
   dataList.value = rowData;
   currentPage.value = 3;
 }, 2000);
-onMounted(() => {
-  const tableColumns = [
-    {
-      title: "",
-      dataIndex: "",
-      key: "",
-      type: "checkbox",
-      width: 80,
+const tableColumns = [
+  {
+    title: "",
+    dataIndex: "",
+    key: "",
+    type: "checkbox",
+    width: 80,
+  },
+  // {
+  //     type: 'index',
+  //     index: (index) => {
+  //         return index * 2;
+  //     }
+  // },
+  {
+    title: "ID",
+    dataIndex: "id",
+    key: "id",
+    fixed: "left",
+    sorter: (val) => {
+      getSortData(val);
     },
-    // {
-    //     type: 'index',
-    //     index: (index) => {
-    //         return index * 2;
-    //     }
+    visible: true, // 是否可见
+    exportable: false, // 是否可导出
+  },
+  {
+    title: "商品名商品名商品名商品名商品名商品名商品名商品名",
+    dataIndex: "goods_name",
+    key: "goods_name",
+    ellipsis: true,
+    fixed: "right",
+  },
+  {
+    title: "价格",
+    dataIndex: "price",
+    key: "price",
+    fixed: "left",
+    sorter: (val) => {
+      sortKey = val;
+      console.log(app);
+      app.refresh();
+    },
+    render(column, row) {
+      // return `<span style="color: red;">${row[column.dataIndex]}</span>`;
+      return `<wd-button>${row[column.dataIndex]}</wd-button>`;
+    },
+    valueType: "text", // 表单类型
+    defaultValue: "",
+    valueEnum() {
+      // 对应key的枚举值，减少render
+      return {};
+    },
+  },
+  {
+    title: "颜色",
+    dataIndex: "color",
+    key: "color",
+    // hideInTable: true,
+    // render(column, row) {
+    //   return `<span style="color: red;">${row[column.dataIndex]}</span>`;
     // },
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-      fixed: "left",
-      sorter: (val) => {
-        getSortData(val);
+    valueType: "multiple", // 表单类型
+    defaultValue: "red",
+    valueEnum() {
+      // 对应key的枚举值，减少render，但是render的优先级更高
+      return {
+        red: "红色",
+        green: "绿色",
+        blue: "蓝色",
+      };
+    },
+  },
+  {
+    title: "生产日期",
+    dataIndex: "ctime",
+    key: "ctime",
+    valueType: "date",
+    dateOptions: {
+      format: "YYYY/MM/DD",
+      valueFormat: "YYYY-MM-DD",
+      picker: "month",
+      placeholder: "生产日期",
+    },
+    // fixed: "right",
+  },
+  {
+    title: "产地",
+    dataIndex: "location",
+    key: "location",
+    hideInSearch: true,
+  },
+  {
+    title: "生产日期",
+    dataIndex: "update_time",
+    valueType: "range",
+    dateOptions: {
+      format: "YYYY/MM/DD",
+      valueFormat: "YYYY-MM-DD",
+      placeholder: ["开始日期", "截止日期"],
+    },
+  },
+  {
+    title: "更新时间",
+    dataIndex: "update_time",
+    key: "update_time",
+  },
+  {
+    title: "更新时间",
+    dataIndex: "update_time",
+    key: "update_time",
+  },
+  {
+    title: "更新时间",
+    dataIndex: "update_time",
+    key: "update_time",
+  },
+  {
+    title: "更新时间",
+    dataIndex: "update_time",
+    key: "update_time",
+  },
+  {
+    title: "操作",
+    dataIndex: "action",
+    key: "action",
+    fixed: "right",
+    width: "300px",
+    buttons: [
+      {
+        type: "primary",
+        text: "编辑",
+        click() {},
       },
-      visible: true, // 是否可见
-      exportable: false, // 是否可导出
-    },
+      {
+        type: "danger",
+        text: "删除",
+        click() {},
+      },
+    ],
+  },
+];
+const config = reactive({
+  columns: tableColumns,
+  downloadable: true,
+  url: "http://123.57.68.108:8080",
+  toolbar: [
     {
-      title: "商品名商品名商品名商品名商品名商品名商品名商品名",
-      dataIndex: "goods_name",
-      key: "goods_name",
-      ellipsis: true,
-      fixed: "right",
-    },
-    {
-      title: "价格",
-      dataIndex: "price",
-      key: "price",
-      fixed: "left",
-      sorter: (val) => {
-        sortKey = val;
-        console.log(app);
+      type: "primary",
+      text: "刷新",
+      // loading: true,
+      click() {
         app.refresh();
       },
-      render(column, row) {
-        // return `<span style="color: red;">${row[column.dataIndex]}</span>`;
-        return `<wd-button>${row[column.dataIndex]}</wd-button>`;
+    },
+    {
+      type: "primary",
+      text: "导出全部1",
+      // loading: true,
+      click() {
+        console.log(123);
       },
-      valueType: "text", // 表单类型
-      defaultValue: "",
-      valueEnum() {
-        // 对应key的枚举值，减少render
-        return {};
+    },
+    "|",
+    {
+      type: "danger",
+      text: "批量删除",
+      // loading: true,
+      click() {
+        console.log(123);
       },
     },
     {
-      title: "颜色",
-      dataIndex: "color",
-      key: "color",
-      // hideInTable: true,
-      // render(column, row) {
-      //   return `<span style="color: red;">${row[column.dataIndex]}</span>`;
-      // },
-      valueType: "select", // 表单类型
-      defaultValue: "red",
-      valueEnum() {
-        // 对应key的枚举值，减少render，但是render的优先级更高
-        return {
-          red: "红色",
-          green: "绿色",
-          blue: "蓝色",
-        };
+      type: "primary",
+      subtype: "upload",
+      text: "上传文件",
+      click(val) {
+        console.log(val);
       },
     },
     {
-      title: "生产日期",
-      dataIndex: "ctime",
-      key: "ctime",
-      valueType: "date",
-      dateOptions: {
-        format: "YYYY/MM/DD",
-        valueFormat: "YYYY-MM-DD",
+      type: "primary",
+      text: "导出2",
+      // loading: true,
+      click() {
+        console.log(123);
       },
-      // fixed: "right",
     },
     {
-      title: "产地",
-      dataIndex: "location",
-      key: "location",
-      hideInSearch: true,
+      type: "primary",
+      text: "导出全部2",
+      // loading: true,
+      click() {
+        console.log(123);
+      },
+    },
+    "|",
+    {
+      type: "danger",
+      text: "批量删除",
+      // loading: true,
+      click() {
+        console.log(123);
+      },
     },
     {
-      title: "更新时间",
-      dataIndex: "update_time",
-      key: "update_time",
+      type: "upload",
+      subtype: "upload",
+      text: "上传文件",
+      click(val) {
+        console.log(val);
+      },
     },
+  ],
+  searchAreaBtns: [
     {
-      title: "更新时间",
-      dataIndex: "update_time",
-      key: "update_time",
+      type: "primary",
+      text: "自定义按钮",
+      // loading: true,
+      click() {
+        console.log(123);
+      },
     },
-    {
-      title: "更新时间",
-      dataIndex: "update_time",
-      key: "update_time",
+  ],
+  listeners: {
+    dataLoad(res) {
+      console.log("dataload: ", res);
     },
-    {
-      title: "更新时间",
-      dataIndex: "update_time",
-      key: "update_time",
+    beforeDataRequest(data) {
+      console.log(data);
+      data.page = 3;
+      if (sortKey) data.sortKey = sortKey;
+      return data;
     },
-    {
-      title: "更新时间",
-      dataIndex: "update_time",
-      key: "update_time",
-    },
-    {
-      title: "操作",
-      dataIndex: "action",
-      key: "action",
-      fixed: "right",
-      width: "300px",
-      buttons: [
-        {
-          type: "primary",
-          text: "编辑",
-          click() {},
-        },
-        {
-          type: "danger",
-          text: "删除",
-          click() {},
-        },
-      ],
-    },
-  ];
-  const config = reactive({
-    columns: tableColumns,
-    downloadable: true,
-    url: "http://123.57.68.108:8080",
-    toolbar: [
-      {
-        type: "primary",
-        text: "刷新",
-        // loading: true,
-        click() {
-          app.refresh();
-        },
-      },
-      {
-        type: "primary",
-        text: "导出全部1",
-        // loading: true,
-        click() {
-          console.log(123);
-        },
-      },
-      "|",
-      {
-        type: "danger",
-        text: "批量删除",
-        // loading: true,
-        click() {
-          console.log(123);
-        },
-      },
-      {
-        type: "primary",
-        subtype: "upload",
-        text: "上传文件",
-        click(val) {
-          console.log(val);
-        },
-      },
-      {
-        type: "primary",
-        text: "导出2",
-        // loading: true,
-        click() {
-          console.log(123);
-        },
-      },
-      {
-        type: "primary",
-        text: "导出全部2",
-        // loading: true,
-        click() {
-          console.log(123);
-        },
-      },
-      "|",
-      {
-        type: "danger",
-        text: "批量删除",
-        // loading: true,
-        click() {
-          console.log(123);
-        },
-      },
-      {
-        type: "upload",
-        subtype: "upload",
-        text: "上传文件",
-        click(val) {
-          console.log(val);
-        },
-      },
-    ],
-    searchAreaBtns: [
-      {
-        type: "primary",
-        text: "自定义按钮",
-        // loading: true,
-        click() {
-          console.log(123);
-        },
-      },
-    ],
-    listeners: {
-      dataLoad(res) {
-        console.log("dataload: ", res);
-      },
-      beforeDataRequest(data) {
-        console.log(data);
-        data.page = 3;
-        if (sortKey) data.sortKey = sortKey;
-        return data;
-      },
-      // beforeAdd() {},
-      // beforeEdit() {},
-      // beforeDelete() {},
-      add() {},
-      edit() {},
-      delete() {},
-      // beforeSearch(params) {},
-      // beforeDownload(params) {},
-    },
-  });
+    // beforeAdd() {},
+    // beforeEdit() {},
+    // beforeDelete() {},
+    add() {},
+    edit() {},
+    delete() {},
+    // beforeSearch(params) {},
+    // beforeDownload(params) {},
+  },
+});
+onMounted(() => {
   // const app = init({
   //   el: "#wd-table",
   //   // title: "pro-table",
