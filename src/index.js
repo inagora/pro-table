@@ -38,3 +38,9 @@ export function init(config) {
   };
   return app;
 }
+
+export { ProTable };
+const install = (app) => {
+  app.component("pro-table", ProTable);
+};
+export default { install };
