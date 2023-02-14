@@ -1,12 +1,23 @@
+<script>
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  name: "pro-table",
+  setup() {},
+});
+</script>
+
 <script setup>
+import "./style.css";
+import "@inagora/wd-view/dist/index.css";
 import { provide, onUnmounted, ref } from "vue";
 import mitt from "mitt";
 const emitter = mitt();
-import Table from "./components/Table.vue";
-import Toolbar from "./components/Toolbar.vue";
-import Search from "./components/Search.vue";
-import Title from "./components/Title.vue";
-import Tips from "./components/Tips.vue";
+import Table from "../components/Table.vue";
+import Toolbar from "../components/Toolbar.vue";
+import Search from "../components/Search.vue";
+import Title from "../components/Title.vue";
+import Tips from "../components/Tips.vue";
 // 支持的组件
 const components = [Title, Tips, Toolbar, Search, Table];
 const props = defineProps(["config"]);

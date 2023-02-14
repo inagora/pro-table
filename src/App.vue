@@ -3,7 +3,6 @@
 </template>
 <script setup>
 import { onMounted, reactive, ref } from "vue";
-import { init } from "./index.js";
 import { WdButton } from "@inagora/wd-view";
 let sortKey = "";
 let dataList = ref([]);
@@ -67,7 +66,7 @@ const tableColumns = [
     sorter: (val) => {
       sortKey = val;
       console.log(app);
-      app.refresh();
+      // app.refresh();
     },
     render(column, row) {
       // return `<span style="color: red;">${row[column.dataIndex]}</span>`;
@@ -178,7 +177,7 @@ const config = reactive({
       text: "刷新",
       // loading: true,
       click() {
-        app.refresh();
+        // app.refresh();
       },
     },
     {

@@ -10,6 +10,7 @@ export default defineConfig({
       name: "ProTable",
       fileName: () => `index.js`, // 如果直接使用index.js，文件名为cjs后缀
       formats: ["umd"],
+      library: "ProTable",
     },
   },
   define: {
@@ -23,6 +24,10 @@ export default defineConfig({
         vue: "Vue",
         "wd-view": "WdView",
       },
+      filename: "index.js",
+      path: "dist",
+      libraryTarget: "umd",
+      library: "ProTable",
     },
   },
 });
